@@ -1,0 +1,116 @@
+//////////////////////////////////////////////
+//  (2014)				    //
+//	Áö·Ú°¹¼ö ÆÄ¾Ç °¡Àå ±âº» ¼Ò½º ±¸Çö   //
+//					    //
+//					    //
+//////////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int x,y;
+	int ***inmap;
+	int cnt;
+
+	vector<int>vx;
+	vector<int>vy;
+
+public:
+
+	void InputTotal()
+	{
+		cin>>total;
+		inmap = new int**[total];
+		for(cnt = 0 ; cnt< total ; cnt ++)
+		{
+			InputLen();
+			Cacul();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		char tmp;
+
+		cin>>y>>x;
+		vx.push_back(x);
+		vy.push_back(y);
+		inmap[cnt] = new int*[y];
+
+		for(int i = 0 ; i < y ; i ++)
+		{
+			inmap[cnt][i] = new int[x];
+
+			for(int j = 0 ; j < x ; j ++)
+			{
+				cin>>tmp;
+				if(tmp == '*')
+					inmap[cnt][i][j] = -1;
+				else
+					inmap[cnt][i][j] = 0;
+			}
+		}
+	}
+	void Cacul()
+	{
+		for(int i = 0 ; i < y ; i ++)
+		{
+			for(int j = 0 ; j < x ; j ++)
+			{
+				if(inmap[cnt][i][j] == -1)
+				{
+					if(i-1 >= 0)
+					{
+						if(inmap[cnt][i-1][j] != -1)
+						inmap[cnt][i-1][j]++;
+						if(j+1 < x && inmap[cnt][i-1][j+1] != -1)
+							inmap[cnt][i-1][j+1]++;
+						if(j-1 >= 0 && inmap[cnt][i-1][j-1] != -1)
+							inmap[cnt][i-1][j-1]++;
+					}
+					if(j-1>= 0 && inmap[cnt][i][j-1] != -1)
+						inmap[cnt][i][j-1]++;
+					if(j+1< x && inmap[cnt][i][j+1] != -1)
+						inmap[cnt][i][j+1]++;
+					if(i+1 < y) 
+					{
+						if( inmap[cnt][i+1][j] != -1)
+						inmap[cnt][i+1][j]++;
+						if(j-1 >= 0 && inmap[cnt][i+1][j-1] != -1)
+							inmap[cnt][i+1][j-1]++;
+						if(j+1 < x && inmap[cnt][i+1][j+1] != -1)
+							inmap[cnt][i+1][j+1]++;
+					}
+				}
+			}
+		}
+	}
+	void Print()
+	{
+		for(int h = 0 ; h < cnt ; h ++)
+		{
+			for(int i = 0 ; i < vy[h] ; i ++)
+			{
+				for(int j = 0 ; j < vx[h] ; j ++)
+				{
+					if(inmap[h][i][j] == -1)
+						cout<<"*";
+					else
+						cout<<inmap[h][i][j];
+				}
+				cout<<endl;
+			}
+		}
+	}
+};
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

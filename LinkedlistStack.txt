@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct st{
+	int val;
+	struct st * ln;
+	struct st * rn;
+}st;
+
+void push( st * s1, st * top, int val ){
+
+	s1 = (st*)malloc(sizeof(st));
+	s1->val = val;
+	s1->ln = top;
+	s1->rn = NULL;
+	top->rn = s1;
+	printf("top -> val is %3d \n",top -> val);
+}
+
+
+void main(){
+	st * s;
+	st *  top;
+	st * s1;
+	int num;
+	int val;
+	s  = (st*)malloc(sizeof(st));
+	s1 = s;
+	top = s;
+	s->val = 0;
+	s->ln = NULL;
+
+	while(1){
+		printf("1 is push 2 is pop 3 is exit \n input number : ");
+		scanf("%d",&num);
+		if( num == 1 ){
+			printf("push number : ");
+			scanf("%d",&val);
+			push( s1,  top, val);
+			top = top -> rn;
+		}
+		else if( num == 2 ){
+			if( top->ln == NULL ){
+				printf("this stack is empty!!!!\n");
+			}
+			else{
+				printf("pop is %d",top->val);
+				top=top->ln;
+			}
+		}
+		else if( num == 3 ){
+			break;
+		}
+	}
+	printf("hello world");
+}

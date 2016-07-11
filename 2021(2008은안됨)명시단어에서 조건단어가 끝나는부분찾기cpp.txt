@@ -1,0 +1,68 @@
+//////////////////////////////////////////////////
+//						//
+//	2021(2008은 안됨)				//
+//	명시단어에서 조건단어가 끝나는부분찾기	//
+//						//
+//						//
+//////////////////////////////////////////////////
+
+
+#include<iostream>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	string val;
+	string str;
+
+	vector<int>vctotal;
+
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			cin>>val;
+			cin>>str;
+			Cacul();
+		}
+		Print();
+	}
+	void Cacul()
+	{
+		int j = 0;
+		for(int i = 0 ; i < val.size() ; i ++)
+		{
+			for(;j<str.size();j++)
+			{
+				if(val[i] == str[j])
+				{
+					if(i == val.size()-1)
+					{
+						vctotal.push_back(j+1);
+						return ;
+					}
+					break;
+				}
+			}
+		}
+		vctotal.push_back(0);
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

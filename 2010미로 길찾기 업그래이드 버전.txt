@@ -1,0 +1,144 @@
+//////////////////////////////////////////////////
+//						//
+//	2010					//					
+//	미로 길찾기 업드래이드 버전.		//
+//	벽과 조건식 길 찾기 버전.		//
+//						//
+//////////////////////////////////////////////////
+
+
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<string>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+
+	int lenx;
+	int leny;
+
+	int cnt;
+
+	char **map;
+	string scase;
+
+	vector<int>vctotal;
+
+	stack<int>sx;
+	stack<int>sy;
+
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			vctotal.push_back(Start());
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		cin>>leny>>lenx;
+		map = new char*[leny];
+		for(int i = 0 ; i < leny ; i ++)
+		{
+			map[i] = new char [lenx];
+			for(int j = 0 ; j < lenx ; j ++)
+				cin>>map[i][j];
+		}
+		cin>>scase;
+	}
+
+	int Start()
+	{
+		int x = 0;
+		int y = 0;
+		cnt = 0;
+		Wall(y,x);
+
+		while(true)
+		{
+			if(y == leny-1 && x == lenx-1)
+			{
+				for(int i = 0 ; sx.size() > 0; i++)
+				{
+					sy.pop();
+					sx.pop();
+				}
+				return 1;
+			}
+			if(x < lenx-1 && map[y][x+1] == scase[cnt])
+			{
+				Wall(y,++x);
+				continue;
+			}
+			else if(y < leny-1 && map[y+1][x] == scase[cnt])
+			{
+				Wall(++y,x);
+				continue;
+			}
+			else if(x > 0 && map[y][x-1] == scase[cnt])
+			{
+				Wall(y,--x);
+				continue;
+			}
+			else if(y > 0 && map[y-1][x] == scase[cnt])
+			{
+				Wall(--y,x);
+				continue;
+			}
+			else
+			{
+				if(sy.size() <= 1)
+				{
+					return 0;
+				}
+				else
+				{
+					if(cnt == 0)
+						cnt = scase.size()-1;
+					else
+						cnt--;
+					sy.pop();
+					sx.pop();
+					x = sx.top();
+					y = sy.top();
+				}
+			}
+		}
+		cnt = 0;
+	}
+
+	void Wall(int y,int x)
+	{
+		cnt++;
+		if(cnt % scase.size() == 0)
+			cnt = 0;
+		map[y][x] = '0';
+		sy.push(y);
+		sx.push(x);
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+		{
+			if(vctotal[i] == 1)
+				cout<<"YES"<<endl;
+			else
+				cout<<"NO"<<endl;
+		}
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

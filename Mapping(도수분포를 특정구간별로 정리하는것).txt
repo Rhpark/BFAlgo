@@ -1,0 +1,41 @@
+//////////////////////////////////////////////////
+//						//
+//  Mapping(도수분포를 특정구간별로 정리하는것) //
+//  도수분포표					//
+//						//
+//////////////////////////////////////////////////
+
+#include<iostream>
+
+using namespace std;
+
+class Mapping
+{
+	int grade[10];
+	int gradNum[11];
+public:
+	Mapping()
+	{
+		for(int i = 0 ; i < 11 ; i ++)
+			gradNum[i] = 0;
+	}
+	void InputGrade()
+	{
+		for(int i = 0 ; i < 10 ; i ++)
+			cin>>grade[i];
+		Map();
+	}
+	void Map()
+	{
+		for(int i = 0 ; i < 10 ; i ++)
+			gradNum[grade[i]/10]++;
+		for(int i = 0 ; i < 11 ; i ++)
+			cout<<i<<" : "<<gradNum[i]<<endl;
+	}
+};
+int main()
+{
+	Mapping m;
+	m.InputGrade();
+	return 0;
+}

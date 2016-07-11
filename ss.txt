@@ -1,0 +1,110 @@
+#include<stdio.h>
+#include<malloc.h>
+
+int total;
+int len;
+int max;
+int *lenvc;
+int *vctotal;
+
+void Print();
+void InputLen();
+void Cacul();
+
+void InputTotal()
+{
+	scanf("%d",&total);
+	vctotal = (int*)malloc(total*sizeof(int));
+	for(int i = 0 ; i < total ; i ++)
+	{ 
+		InputLen();
+		Cacul();
+		delete lenvc;
+	}
+	Print();
+}
+void InputLen()
+{
+	int n;
+	scanf("%d",&len);
+	max = 0;
+	lenvc = (int*)malloc(len*sizeof(int));
+	for(int i = 0 ; i < len ; i ++)
+	{
+		scanf("%d",&n);
+		if(max < n-1000) max = n-1000;
+		lenvc[i] = n-1000;
+	}
+}
+void Cacul()
+{
+	int front = 0;
+	int frontSum = lenvc[0];
+
+	int end = len-1;
+	int endSum = lenvc[len-1];
+	int i = 0;
+	while(true)
+	{
+		if(front+1 < end)
+		{
+			int	_front	= frontSum	+	lenvc[front+1];
+			front++;
+			if(_front > 0)
+			{
+				frontSum = _front;
+				if(max <frontSum )
+					max = frontSum;
+			}
+			else
+			{
+				frontSum = lenvc[front];
+			}
+		}
+		if(end -1 >front)
+		{
+			int	_end	= endSum	+	lenvc[end-1];
+
+			end--;
+			if(_end > 0)
+			{
+				endSum = _end;
+				if(endSum > max )
+					max = endSum;
+			}
+			else
+			{
+				endSum = lenvc[end];
+			}
+		}
+		else
+		{
+			if(frontSum < max && endSum < max)
+			{	vctotal[i] = max;i++;break;}
+
+			if(frontSum >0 && endSum > 0){
+				vctotal[i] = frontSum+endSum;i++;break;}
+			if(frontSum < 0)
+			{
+				vctotal[i] = endSum; i++;break;
+			}
+			if(endSum <0){
+				vctotal[i++] = frontSum;break;}
+			if(frontSum == max)
+			{
+				vctotal[i] = max;i++;break;}
+			break;
+		}
+	}
+}
+void Print()
+{
+	for(int i = 0 ; i < total ; i ++)
+	{	printf("%d\n",vctotal[i]);	}
+}
+
+int main()
+{
+	InputTotal();
+	return 0;
+}

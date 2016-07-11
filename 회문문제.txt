@@ -1,0 +1,55 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+class palindrome
+{
+	ifstream fin;	
+	__int64 inval;
+	__int64 inval2;
+	char cinval[64];
+	int  i;
+	string sinval;
+
+public:
+
+	void init()
+	{
+		i = 0;
+		fin.open("palindrome.txt");
+		fin>>inval;
+	}
+	void calcul()
+	{
+		while(true)
+		{
+			itoa(inval,cinval,10);
+			sinval = cinval;
+			reverse(sinval.begin(),sinval.end());
+			strcpy(cinval,sinval.c_str());
+			inval2 = atoi(cinval);
+			if(inval - inval2 == 0)
+			{
+				cout<<" "<<i<<endl<<" "<<inval<<endl;
+				break;
+			}
+			inval+=inval2;
+			if(i>1000)
+			{
+				cout<<"Not Found"<<endl;
+				break;
+			}
+			i++;
+		}
+	}
+
+};
+int main()
+{
+	palindrome pal;
+	pal.init();		//초기화
+	pal.calcul();	//계산.
+	return 0;
+}

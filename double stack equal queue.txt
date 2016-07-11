@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct stack{
+        int len[100];
+        int top;
+ }stack;
+void push(stack * in_st, int val){
+     in_st->top++;
+     in_st->len[in_st->top]=val;
+     }
+void pop(stack * in_st , stack *out_st){
+     if(in_st->top==-1&&out_st->top==-1){
+               printf("this double stack is empty.!\n");return 0;
+               }
+     while(1){
+      out_st->top++;
+      out_st->len[out_st->top] = in_st->len[in_st->top];
+      //printf("in_st->len[%d] = %d  out_st->len[%d] = %d  \n"
+      //,in_st->top, in_st->len[in_st->top], out_st->top, out_st->len[out_st->top]);      
+      in_st->top--;
+      
+      if(in_st->top==-1){
+                         printf("this pop is out_st->len[%d] = %d\n"
+                         ,out_st->top, out_st->len[out_st->top]);
+                         out_st->top--;//이까지 팝임 이후 자시 인풋에 복사. 
+                         while(1){
+                         if(out_st->top==-1){
+                         return 0 ;}                                 
+                         in_st->top++;
+                         in_st->len[in_st->top] = out_st->len[out_st->top];
+                         //printf("out_st->len[%d] = %d  in_st->len[%d] = %d\n"
+                         //,out_st->top, out_st->len[out_st->top], in_st->top, in_st->len[in_st->top]);      
+                         out_st->top--;
+
+                         }
+      }
+     }
+}
+int main(int argc, char *argv[])
+{
+    stack in_st;
+    stack out_st;
+    in_st.top=-1;
+    out_st.top=-1;
+    int val;
+    while(1){
+             printf("in put numer :\n 1 is push, 2 is pop, 3 is exit : ");
+             scanf("%d",&val);
+             if(val==1){
+                        int num;
+                        printf("push the number : ");
+                        scanf("%d",&num);
+                        push( &in_st , num);
+                        }
+             else if(val==2)
+                            pop( &in_st , &out_st );  
+             else if(val==3)
+                            break;             
+    }
+  system("PAUSE");	
+  return 0;
+}

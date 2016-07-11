@@ -1,0 +1,132 @@
+//////2010 ¾ËÆÄºª ¹Ì·Î
+
+#include<iostream>
+#include<vector>
+#include<list>
+#include<algorithm>
+#include<string>
+#include<stack>
+using namespace std;
+
+class Algo
+{
+	vector<string>vcTotal;
+	int total;
+	char **map;
+	int startx,starty,startlen;
+	string sCase;
+	stack<int>stx,sty;
+
+public:
+	void InputTotal()
+	{		
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{			
+			Compare();
+		}
+		Print();
+	}
+	void Compare()
+	{
+		int y,x;
+		cin>>y>>x;
+		map = new char*[y];
+		for(int i = 0 ; i < y ; i++)
+		{
+			map[i] = new char[x];
+			for(int j = 0 ; j < x ; j ++)
+			{
+				cin>>map[i][j];
+			}
+		}
+		cin>>sCase;
+		startlen =  starty = 0;
+		startx = -1;
+		while(true)
+		{			
+			if(startx == x-1 && starty == y-1)
+			{
+				vcTotal.push_back("YES");
+				break;
+			} 
+			else if(startx < x-1 && map[starty][startx+1] == sCase[startlen])
+			{
+				startx++;
+				Push();
+			} 
+			else if(startx > 0 && map[starty][startx-1] == sCase[startlen])
+			{
+				startx--;
+				Push();
+			} 
+			else if(starty < y-1 && map[starty+1][startx] == sCase[startlen])
+			{
+				starty++;
+				Push();
+			} 
+			else if(starty > 0 &&map[starty-1][startx] == sCase[startlen])
+			{
+				starty--;
+				Push();
+			}
+			else {
+				if(1 < stx.size())
+				{
+					Pop();
+				}else
+				{
+					vcTotal.push_back("NO");
+					break;
+				}
+			}
+		}
+		Clear();
+	}
+	void Push()
+	{
+		map[starty][startx] = '0';
+		stx.push(startx);
+		sty.push(starty);
+		startlen++;
+		if(startlen > sCase.length()-1)
+		{
+			startlen = 0;
+		}
+	}
+	void Pop()
+	{
+		stx.pop();
+		sty.pop();
+		startx = stx.top();
+		starty = sty.top();
+		startlen--;
+		if(startlen == -1)
+			startlen = sCase.length()-1;			
+	}
+
+	void Clear()
+	{
+		while(true){
+			if(!stx.empty())
+			{
+				stx.pop();
+				sty.pop();
+			}else
+				break;
+		}
+	}
+	void Print()
+	{
+		for(int i = 0 ; i< vcTotal.size(); i ++)
+		{
+			cout<<vcTotal[i]<<endl;
+		}
+	}
+};
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

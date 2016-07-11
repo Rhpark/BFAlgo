@@ -1,0 +1,91 @@
+#include<iostream>
+
+using namespace std;
+
+class Prime
+{
+	int total;
+	int *input;
+	int *ary;
+	int size;
+	int **res;
+	int cnt;
+
+public:
+	void PrimeReset(int primelen)
+	{
+		for(int i = 0 ; i < primelen ; i ++)
+			ary[i] = 0;
+		ary[0] = -1;
+		ary[1] = -1;
+	}
+	void Input()
+	{
+		cin>>total;
+		input = new int[total];
+		res = new int*[total];
+		for(cnt = 0 ; cnt < total ; cnt ++)
+		{
+			res[cnt] = new int[2];
+			size = input[cnt];
+			ary = new int [input[cnt]+1];
+			PrimeReset(input[cnt]+1);
+			Find(input[cnt]+1);
+			Sum();
+			delete []ary;
+		}
+		Print();
+	}
+	void Find(int num)
+	{
+		for(int i = 3 ; i < num ; i ++)
+			for(int j = 2 ; j < i ; j ++)
+				if((i%j == 0)&&(ary[i] == 0))
+					ary[i] = -1; 	
+	}
+	void Sum()
+	{
+		int tmp[2] = {-999,999};
+		for(int i = 3 ; i < size ; i++)
+		{
+			for(int j = 3 ; j < size ; j++)
+			{
+				if(ary[i] == 0 && ary[j] == 0)
+
+					if(i+j == size)
+					{
+						if(i>j)
+						{
+							if(tmp[1] - tmp[0] >i-j)
+							{
+								tmp[0] = j;
+								tmp[1] = i;
+							}
+						}
+						else
+						{
+							if(tmp[1] - tmp[0] >i-j)
+							{
+								tmp[0] = i;
+								tmp[1] = j;
+							}
+						}
+					}
+			}
+		}
+		res[cnt][0] = tmp[0];
+		res[cnt][1] = tmp[1];
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i++)
+			cout<<res[i][0]<<" "<<res[i][1]<<endl;
+	}
+};
+
+int main()
+{
+	Prime p;
+	p.Input();
+	return 0;
+}

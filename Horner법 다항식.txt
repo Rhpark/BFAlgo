@@ -1,0 +1,50 @@
+////////////////////////////////////////////////////
+//						  //
+//  f(x) = nX4½Â + n1*X3½Â+ n2*X2½Â+ n3*X1½Â + n  //
+//						  //
+//						  //
+////////////////////////////////////////////////////
+
+#include<iostream>
+
+#define MAX 5
+
+using namespace std;
+
+class Horner
+{
+	int a[MAX];
+
+public:
+
+	Horner()
+	{
+		a[0] = 5;
+		a[1] = 4;
+		a[2] = 3;
+		a[3] = 2;
+		a[4] = 1;
+	}
+	void A1()
+	{
+		for(int x = 1 ; x <=5; x++)
+			cout<<"x°¡ "<<x<<" ÀÏ¶§ ÃÑ °ªÀº "<<B(x)<<endl;
+	}
+	int B(int x)
+	{
+		int p;
+		p = a[MAX-1];
+		
+		for(int i = MAX-2 ; i >= 0 ; i --)
+			p = p*x+a[i];
+		
+		return p;
+	}
+};
+
+int main()
+{
+	Horner a;
+	a.A1();
+	return 0;
+}

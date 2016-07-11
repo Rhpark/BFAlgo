@@ -1,0 +1,117 @@
+//////////////////////////////////////////////////
+//						//
+//	2015					//
+//	3의 n승으로 양팔저울 무게 맟추기	//
+//	제귀 함수를 이용하였음.			//
+//						//
+//////////////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int ary[11];		
+	int accrue[11];	
+	int val;
+	int lsum , rsum;
+	int cnt;
+	int maxary_i;
+
+	vector<int>*llen , *rlen;
+
+public:
+	Algo()
+	{
+		int tmp = 1;
+		for(int i = 0 ; i < 11; i ++)
+		{
+			ary[i] = tmp;
+			tmp *= 3;
+			accrue[i] = 0;
+		}
+		accrue[0] = 1;
+		for(int i = 1 ; i < 11 ; i ++)
+			accrue[i] = ary[i] + accrue[i-1];
+		
+	}
+	void InputTotal()
+	{
+		cin>>total;
+		llen = new vector<int>[total];
+		rlen = new vector<int>[total];
+		for(cnt = 0 ; cnt < total ; cnt ++)
+		{
+			cin>>val;
+			rsum = val;
+			InputLen(val);
+		}
+		Print();
+	}
+	void InputLen(int gap)
+	{		
+		for(int i = 0 ; i < 11 ; i ++)
+		{
+			if(accrue[i] >= gap)
+			{ 
+				maxary_i = i;
+				if(llen[cnt].empty())
+				{
+					llen[cnt].push_back(ary[maxary_i]);
+					lsum = ary[maxary_i];
+					if(ary[maxary_i] > gap )
+						InputLen(ary[maxary_i] - gap);
+					else
+						InputLen(gap - ary[maxary_i]);
+				}
+				else if(lsum > rsum)
+				{
+					rlen[cnt].push_back(ary[maxary_i]);
+					rsum += ary[maxary_i];
+					if(ary[maxary_i] > gap )
+						InputLen(ary[maxary_i] - gap);
+					else
+						InputLen(gap - ary[maxary_i]);
+				}
+				else if(lsum < rsum)
+				{
+					llen[cnt].push_back(ary[maxary_i]);
+					lsum += ary[maxary_i];
+					if(ary[maxary_i] > gap )
+						InputLen(ary[maxary_i] - gap);
+					else
+						InputLen(gap - ary[maxary_i]);
+				}
+				else if(lsum == rsum)
+					return;
+				break;
+			}
+		}
+	}
+	void Print()
+	{
+		for(int k = 0 ; k < total ; k ++)
+		{
+			for(int i = llen[k].size()-1 ; i >= 0 ;i--)
+				cout<<llen[k][i]<<" ";
+			cout<<endl;
+			if(rlen[k].empty()) cout<<0<<endl;
+			else
+			{
+				for(int i = rlen[k].size()-1 ; i >= 0 ;i--)
+					cout<<rlen[k][i]<<" ";
+				cout<<endl;
+			}
+		}
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

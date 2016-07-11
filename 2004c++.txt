@@ -1,0 +1,237 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+class Roma
+{
+	int total;
+	string **st;
+	string *stval;
+	int **stInt;
+	int sum;
+	int cnt;
+
+	void StringInput();
+	void StToInt(string st,int num);
+	void IntToSt(int num);
+	void Print();
+
+public:
+
+	Roma()
+	{
+		total = 0;
+		cnt = 0;
+		sum = 0;
+	}
+	void InputTotalNum();
+};
+
+int main()
+{
+	Roma rm;
+	rm.InputTotalNum();
+}
+
+void Roma::InputTotalNum()
+{
+	cin>>total;
+	st = new string * [total];
+	stInt = new int * [total];
+	stval = new string[total];
+	for(int i = 0 ; i < total ; i ++)
+	{
+		st[i] = new string[2];
+		stInt[i] = new int [3];
+		stInt[i][2] = 0;
+	}
+	for(int i = 0 ; i < total ; i ++)
+	{
+		StringInput();
+		cnt++;
+	}
+	Print();
+}
+
+void Roma::StringInput()
+{
+	cin>>st[cnt][0];
+	cin>>st[cnt][1];
+
+	StToInt(st[cnt][0],0);
+	StToInt(st[cnt][1],1);
+	IntToSt(stInt[cnt][2]);
+}
+
+void Roma::StToInt(string st,int num)
+{
+	int val = 0;
+	for(unsigned int i = 0 ; i < st.length() ; i ++)
+	{
+		if(st[i] == 'M')
+			val += 1000;
+		else if( st[i] == 'D')
+			val += 500;
+		else if(st[i] == 'C')
+		{
+			val += 100;
+			if(i+1 < st.length() && st[i+1] == 'D')
+			{
+				i++;
+				val += 300;
+			}
+			else if(i+1 < st.length() && st[i+1] == 'M')
+			{
+				i++;
+				val += 800;
+			}
+		}
+		else if(st[i] == 'L')
+			val += 50;
+		else if(st[i] == 'X')
+		{
+			val += 10;
+			if(i+1 < st.length() && st[i+1] == 'L')
+			{
+				i++;
+				val += 30;
+			}
+			else if(i+1 < st.length() && st[i+1] == 'C')
+			{
+				i++;
+				val += 80;
+			}
+		}
+		else if(st[i] == 'V')
+			val += 5;
+		else if(st[i] == 'I')
+		{
+			val+=1;
+			if(i+1 < st.length() && st[i+1] == 'V')
+			{
+				i++;
+				val += 3;
+			}
+			else if(i+1 < st.length() && st[i+1] == 'X')
+			{
+				i++;
+				val += 8;
+			}
+		}
+	}
+	stInt[cnt][num] = val;
+	stInt[cnt][2] += val;
+}
+void Roma::IntToSt(int num)
+{
+	string intstr;
+	intstr.empty();
+	int mok = 0;
+	int namoji = num;
+	while(namoji != 0)
+	{
+		if(namoji/1000 != 0)
+		{
+			mok = namoji / 1000;
+			namoji = namoji % 1000;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "M";
+		}
+		else if(namoji/900 != 0)
+		{
+			mok = namoji / 900;
+			namoji = namoji % 900;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "CM";
+		}
+		else if(namoji/500 != 0)
+		{
+			mok = namoji / 500;
+			namoji = namoji % 500;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "D";
+		}
+		else if(namoji/400 != 0)
+		{
+			mok = namoji / 400;
+			namoji = namoji % 400;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "CD";
+		}
+		else if(namoji/100 != 0)
+		{
+			mok = namoji / 100;
+			namoji = namoji % 100;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "C";
+		}
+		else if(namoji/90 != 0)
+		{
+			mok = namoji / 90;
+			namoji = namoji % 90;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "XC";
+		}
+		else if(namoji/50 != 0)
+		{
+			mok = namoji / 50;
+			namoji = namoji % 50;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "L";
+		}
+		else if(namoji/40 != 0)
+		{
+			mok = namoji / 40;
+			namoji = namoji % 40;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "XL";
+		}
+		else if(namoji/10 != 0)
+		{
+			mok = namoji / 10;
+			namoji = namoji % 10;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "X";
+		}
+		else if(namoji/9 != 0)
+		{
+			mok = namoji / 9;
+			namoji = namoji % 9;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "IX";
+		}
+		else if(namoji/5 != 0)
+		{
+			mok = namoji / 5;
+			namoji = namoji % 5;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "V";
+		}
+		else if(namoji/4 != 0)
+		{
+			mok = namoji / 4;
+			namoji = namoji % 4;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "IV";
+		}
+		else if(namoji/1 != 0)
+		{
+			mok = namoji / 1;
+			namoji = namoji % 1;
+			for(int i = 0 ; i < mok ; i ++)
+				intstr += "I";
+		}
+	}
+	stval[cnt] = intstr;
+}
+
+void Roma::Print()
+{
+	for(int i = 0 ; i < total ; i ++)
+	{
+		cout<<stInt[i][0]<<"	"<<stInt[i][1]<<"	"<<stInt[i][2]<<endl;
+		cout<<stval[i]<<endl;
+	}
+}

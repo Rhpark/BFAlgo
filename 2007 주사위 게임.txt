@@ -1,0 +1,107 @@
+#include<iostream>
+
+using namespace std;
+
+class dice
+{
+	int total;
+	int *totalValue;
+	int totalCnt;
+	int playerCnt;
+	int **player;
+
+public:
+	dice()
+	{
+		total = 0;
+		playerCnt = 0;
+		totalCnt = 0;
+	}
+	void Reset()
+	{
+		delete *player;
+		delete player;
+		playerCnt = 0;
+	}
+	void Total()
+	{
+		cin>>total;
+		totalValue = new int [total];
+		for(int i = 0 ; i < total ; i ++)
+		{
+			Player();
+			Ranker();
+			Reset();
+		}
+		Print();
+	}
+	void Player()
+	{
+		cin>>playerCnt;
+		player = new int*[playerCnt];
+		for(int i = 0 ; i < playerCnt; i ++)
+		{
+			player[i] = new int[7];
+			cin>>player[i][0]>>player[i][1]>>
+				player[i][2]>>player[i][3]>>player[i][4];
+
+			player[i][5] = player[i][0] + player[i][1] +
+				player[i][2] + player[i][3] + player[i][4];
+
+			player[i][6] = player[i][0] * player[i][1] *
+				player[i][2] * player[i][3] * player[i][4];
+		}
+	}
+	void Ranker()
+	{
+		int tmp = 0;
+		int tmpcnt = 0;
+		int _mat = 1025;
+		int rank = -1;
+		for(int i = 0 ; i < playerCnt ; i ++)
+		{
+			if((player[i][5] <= 20) && (tmp <= player[i][5]))
+			{
+				if(_mat > player[i][6])
+				{
+					rank = i;
+					tmp = player[i][5];
+					_mat = player[i][6];
+				}
+			}
+		}
+		if(rank != -1)
+		{
+			for(int i = 0 ; i < playerCnt ; i ++)
+			{
+				if(player[rank][5] ==  player[i][5])
+				{
+					if(player[rank][6] == player[i][6])
+					{
+						if(tmpcnt > 0)
+						{
+							rank = -1;
+							break;
+						}
+						tmpcnt++;
+					}
+				}
+			}
+		}
+		totalValue[totalCnt] = rank+1;
+		totalCnt++;
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i++)
+		{	cout<<totalValue[i]<<endl;	}
+	}
+};
+
+int main()
+{
+	dice D;
+	D.Total();
+
+	return 0;
+}

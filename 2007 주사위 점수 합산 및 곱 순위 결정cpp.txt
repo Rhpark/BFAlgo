@@ -1,0 +1,89 @@
+///////////////////////////////////////////////////////////////
+//			           //
+// 2007번			           //
+// 주사위 점수 합산 및 곱 순위 결정 //
+//			           //
+///////////////////////////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+
+	int len;
+	
+	int **ary;
+	vector<int>vctotal;
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			vctotal.push_back(Cacul());
+		}
+		Print();
+	}
+
+	void InputLen()
+	{
+		cin>>len;
+		ary = new int*[len];
+		for(int i = 0 ; i < len; i ++)
+		{
+			ary[i] = new int[7];
+			cin>>ary[i][0]>>ary[i][1]>>ary[i][2]>>ary[i][3]>>ary[i][4];
+			ary[i][5] = ary[i][0]+ary[i][1]+ary[i][2]+ary[i][3]+ary[i][4];
+			ary[i][6] = ary[i][0]*ary[i][1]*ary[i][2]*ary[i][3]*ary[i][4];
+		}
+	}
+
+	int Cacul()
+	{
+		int max = 20;
+		int cnt;
+		int _i = 0;
+		int _5 = 0;
+		for(int i = 0 ; i < len ; i ++)
+		{
+			if(ary[i][5] <= max)
+			{
+				if(_5 < ary[i][5])
+				{
+					_5 = ary[i][5];
+					_i = i;
+				}
+				else if(_5 == ary[i][5])
+				{
+					if(ary[i][6] < ary[_i][6])
+					{
+						_5 = ary[i][5];
+						_i = i;
+					}
+					else if(ary[i][6] == ary[_i][6])
+					{
+						return 0;
+					}
+				}
+			}
+		}
+		return _i+1;
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

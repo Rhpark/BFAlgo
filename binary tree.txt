@@ -1,0 +1,96 @@
+#include<stdio.h>
+#include<stdlib.h>
+//************************************* binary tree*******************************************//
+#define MAX 5
+
+#define LEFT  0
+#define RIGHT 1
+
+typedef struct bn{
+	int num,top;
+	struct bn * dp[2];
+}bn;
+
+
+void init(bn * init);							//노드 초기화.
+void main(){
+
+	int ary[MAX] = {3,1,5,2,4};
+	int i;
+	int num;
+	int val,count=0;
+
+	bn * head;
+	bn * pear;
+
+	head = (bn *) malloc(sizeof(bn));			//노드 선언.
+	for(i=0;i<MAX;i++){
+	printf(" %d ",ary[i]);
+	}
+	printf("이중에서 찾으실 값을 입력하세용 :");
+	scanf("%d",&val);
+
+	i = 0;
+	pear = head;
+	init(pear);									//노드 초기화.
+
+	pear->num = ary[i];
+
+	while(i<MAX-1){
+
+		if((pear->dp[LEFT] == NULL) && (pear->dp[RIGHT] == NULL)){	//최하위까지 갔다가 노드 추가하여 변수값 넣기.
+
+			num = (pear->num < ary[++i]) ? RIGHT : LEFT;
+
+			pear ->dp[num] = (bn *) malloc(sizeof(bn));
+			pear = pear->dp[num];
+
+			init(pear);
+
+			pear -> num = ary[i];
+			pear = head;
+		}
+		else{														//최하위 까지 가기 위한 과정.
+			num = (pear->num < ary[++i]) ? RIGHT : LEFT;
+			if(pear->dp[num] == NULL){
+
+				pear ->dp[num] = (bn *) malloc(sizeof(bn));
+
+				pear = pear->dp[num];
+
+				init(pear);
+
+				pear->num = ary[i];
+
+				pear = head;
+			}
+			else{
+				pear = pear->dp[num];
+				i--;
+			}			
+		}
+	}
+
+	pear = head;
+
+	for(i = 0 ;i < MAX ; i++){
+		printf("%5d",pear->num);
+		if(pear->num == val ){
+			printf("찾음.ㅋㅋㅋㅋㅋㅋㅋㅋㅋ\n");
+			break;
+		}
+		else if(pear->num > val){
+			pear = pear->dp[LEFT];
+		}
+		else if(pear->num < val){
+			pear = pear->dp[RIGHT];
+		}
+	}
+}
+
+void init(bn * init){
+	init->num = 0;
+	init->top = 0;
+	init->dp[LEFT] = NULL;
+	init->dp[RIGHT] = NULL;
+}

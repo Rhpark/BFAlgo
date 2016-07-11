@@ -1,0 +1,62 @@
+//////////////////////////////////////////////////
+//						//
+//	2018					//
+//	괄호'('')'가 정확하게 되어있는지 검사	//
+//	스택안씀.				//
+//						//
+//////////////////////////////////////////////////
+
+#include<iostream>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	string strval;
+	vector <string> vctotal;
+
+public:
+
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			Compare();
+		}
+		Print();
+	}
+	void Compare()
+	{
+		cin>>strval;
+		int cnt = 0;
+		for(int i = 0 ; i < strval.size(); i ++)
+		{
+			if(strval[i] == '(')
+				cnt++;
+			else if(strval[i] == ')')
+				cnt--;
+			if(cnt < 0)
+				break;
+		}
+		if(cnt == 0)
+			vctotal.push_back("YES");
+		else
+			vctotal.push_back("NO");
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < vctotal.size(); i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

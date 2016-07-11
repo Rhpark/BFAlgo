@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct st{
+	int x[100];
+	int y[100];
+	int top;
+}st;
+void start(int ary[][6],st *s){
+    int i,j;
+    for(i = 0 ; i < 5 ; i++ ){
+        for(j = 0 ; j < 6 ; j++){
+			if(ary[i][j] == 2 ){
+				s->top++;
+				s->x[s->top]=j;
+				s->y[s->top]=i;
+			}printf("%3d ",ary[i][j]);
+        }printf("\n");
+    }
+}
+
+void push(int ary[][6],st *s, int y, int x, int *val){
+	if(ary[(s->y[s->top])+y][(s->x[s->top])+x]==3) *val=3;
+	
+	ary[(s->y[s->top])+y][(s->x[s->top])+x]=0;
+	s->top++;
+	s->y[s->top]=(s->y[s->top-1])+y;
+	s->x[s->top]=(s->x[s->top-1])+x;     
+}
+
+void pop(st *s){
+	if(s->top>0){ 
+        s->top--;
+	}
+}     
+
+void s_area(st *s){
+	int i;
+	printf("시작위치 부터 끝 위치 까지는 \n");
+	for(i=0;i<=s->top;i++){
+		printf("sy[%d] sx [%d] = %d %d\n",i,i,s->y[i],s->x[i]);
+	}    
+}
+int main(int argc, char *argv[])
+{   
+    st s;
+    s.top=-1;
+    int val;
+    int ary[5][6] =  {{1,1,1,0,0,0},//맨 끝열은 무조건 0으로 맟춤.
+	{2,0,1,0,0,0},
+	{1,1,1,1,0,0},
+	{0,1,0,1,1,0},
+	{3,1,1,0,0,0}};
+    start(&*ary, &s);
+    while(ary[s.y[s.top]][s.x[s.top]] != 3)
+    {
+		
+		if(ary[s.y[s.top]][(s.x[s.top])+1] == 1 || ary[s.y[s.top]][(s.x[s.top])+1] == 3){
+			push( &*ary , &s, 0, 1, &val);    
+		}
+		else if( ary[(s.y[s.top])+1][s.x[s.top]] == 1 || ary[(s.y[s.top])+1][s.x[s.top]] == 3){
+			push( &*ary , &s, 1, 0, &val);
+		}
+		else if( ary[s.y[s.top]][(s.x[s.top])-1] == 1 || ary[s.y[s.top]][(s.x[s.top])-1] == 3){ 
+			push( &*ary , &s, 0, -1, &val);
+		}                 
+		else if( ary[(s.y[s.top])-1][s.x[s.top]] == 1 || ary[(s.y[s.top])-1][s.x[s.top]] == 3 ){
+			push( &*ary , &s, -1, 0, &val);
+		}
+		else {
+			if( val == 3 ){
+				s_area(&s);
+				break ;
+			} 
+			else pop(&s); 
+		}
+    }
+	system("PAUSE");	
+	return 0;
+}

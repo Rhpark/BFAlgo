@@ -1,0 +1,94 @@
+#include<iostream>
+#include<vector>
+#include<list>
+#include<algorithm>
+#include<string>
+#include<stack>
+#include<math.h>
+
+using namespace std;
+
+class Algo
+{
+	vector<int>*vcTotal;
+	int total;
+	char **map;
+	int i;
+public:
+	void InputTotal()
+	{		
+		cin>>total;
+		vcTotal = new vector<int>[total];
+		for(i = 0 ; i < total ; i ++)
+		{			
+			Compare();
+		}
+		Print();
+	}
+	void Compare()
+	{
+		vector<int>vcLen,vcInput,vcTest;
+		int len;
+		cin>>len;
+		for(int i = 0 ; i < len ; i ++)
+		{
+			int a;
+			cin>>a;
+			vcInput.push_back(a);
+			vcLen.push_back(false);
+		}
+		for(int i = len-1 ; i >= 0 ; i --)
+		{
+			int val = (i+1) - vcInput[i];
+			int cnt = 0;
+			if( val > 0 )
+			{
+				for(int j = len-1 ; j >= 0 ; j --)
+				{
+					if(vcLen[j] == false)
+					{
+						cnt++;
+					}
+					if(cnt == val)
+					{
+						vcLen[j] = true;
+						vcTest.push_back(j+1);
+						break;
+					}
+				}
+				if(cnt < val){
+					vcTotal[this->i].push_back(-5000);
+					return;
+				}
+			}else
+			{
+				vcTotal[this->i].push_back(-5000);
+				return;
+			}
+		}
+		for(int i = len-1 ; i >= 0 ; i --)
+		{
+			vcTotal[this->i].push_back(vcTest[i]);
+		}
+	}
+
+	void Print()
+	{
+		for(int j = 0 ; j < total ; j ++)
+		{ 
+			for(int i = 0 ; i< vcTotal[j].size(); i ++)
+			{
+				if(vcTotal[j][i] == -5000)
+					cout<<"IMPOSSIBLE"<<endl;
+				else
+					cout<<vcTotal[j][i]<<" ";
+			}cout<<endl;
+		}
+	}
+};
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

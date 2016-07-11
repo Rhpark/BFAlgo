@@ -1,0 +1,83 @@
+//////////////////////////////////////////
+//					//
+// 2013문제				//
+// Jolly Jumpper가 가능한지 여부 묻기	//
+//  가능하면 YES 불가능하면 NO		//
+//					//
+//////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int len;
+	vector<int>vclen;
+	vector<int>vctotal;
+
+public:
+
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i< total ; i ++)
+		{
+			InputLen();
+			vctotal.push_back(Cacul());
+			vclen.clear();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		int n;
+		cin>>len;
+		for(int i = 0 ; i < len ; i ++)
+		{
+			cin>>n;
+			vclen.push_back(n);
+		}
+	}
+	int Cacul()
+	{
+		if(len == 1)
+			return false;
+		else
+		{
+			int sum;
+			for(int i = 0 ; i < len-1 ; i ++)
+			{
+				if(vclen[i] > vclen[i+1])
+				{
+					sum = vclen[i] - vclen[i+1];
+				}
+				else if(vclen[i] < vclen[i+1])
+				{
+					sum = vclen[i+1] - vclen[i];
+				}
+				else return false;
+				if(sum >= len)return false;
+			}
+		}
+		return true;
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i++)
+		{
+			if(vctotal[i] == false)
+				cout<<"NO"<<endl;
+			else
+				cout<<"YES"<<endl;
+		}
+	}
+};
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

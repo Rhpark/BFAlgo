@@ -1,0 +1,111 @@
+///////////////////////////////////////////////////////////////////////////
+//  2003번				     //
+// 카드 게임 player의 중간 점수를 비교         //
+//	우승 정하는게임		     //
+//				     //
+///////////////////////////////////////////////////////////////////////////
+
+
+
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int lenx,leny;
+
+	int **player;
+
+	vector<int>vctotal;
+
+public:
+	void InputTotal()
+	{
+		cin>>total;
+
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			Cacul();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		string tmp;
+
+		cin>>leny>>lenx;
+
+		player = new int *[leny];
+
+		for(int i = 0 ; i < leny ; i ++)
+		{
+			player[i] = new int[lenx];
+			for(int j = 0 ; j < lenx ; j ++)
+			{
+				cin>>tmp;
+				player[i][j] = ToInt(tmp);
+			}
+			sort(&player[i][0],&player[i][lenx]);
+		}
+	}
+	int ToInt(string tmp)
+	{
+		int sum = 0;
+		switch (tmp[0])
+		{
+		case 'K': sum += 2;break;
+		case 'H': sum += 3;break;
+		case 'D': sum += 4;break;
+		case 'S': sum += 5;break;
+		}
+		switch(tmp[1])
+		{
+		case 'A': sum += 140;break;
+		case 'K': sum += 130;break;
+		case 'Q': sum += 120;break;
+		case 'J': sum += 110;break;
+		case '1': sum += 100;break;
+		case '9': sum += 90;break;
+		case '8': sum += 80;break;
+		case '7': sum += 70;break;
+		case '6': sum += 60;break;
+		case '5': sum += 50;break;
+		case '4': sum += 40;break;
+		case '3': sum += 30;break;
+		case '2': sum += 20;break;
+		}
+		return sum;
+	}
+	void Cacul()
+	{
+		int _i = 0;
+		int topplayer = player[0][lenx/2];
+		for(int i = 1 ; i < leny ; i ++)
+		{
+			if(topplayer < player[i][lenx/2])
+			{
+				topplayer = player[i][lenx/2];
+				_i = i;
+			}
+		}
+		vctotal.push_back(_i+1);
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

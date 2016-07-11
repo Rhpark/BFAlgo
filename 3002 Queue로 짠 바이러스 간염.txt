@@ -1,0 +1,100 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int **map;
+	int y,x;
+	int _x,_y;
+
+	queue<int>qx,qy;
+	vector<int>vctotal;
+
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			Cacul();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		cin>>y>>x;
+		map = new int *[y];
+		for(int i = 0 ; i < y ; i ++)
+		{
+			map[i] = new int[x];
+			for(int j = 0 ; j < x ; j ++)
+			{
+				cin>>map[i][j];
+				if(map[i][j] == 1)
+				{
+					qx.push(j);
+					qy.push(i);
+				}
+				else if(map[i][j] == 2)
+					map[i][j] = -1;
+			}
+		}
+	}
+	void Cacul()
+	{
+		do
+		{	_x = qx.front();
+			_y = qy.front();
+			qy.pop();
+			qx.pop();
+
+			if(_x < x-1 && map[_y][_x+1] == 0)
+			{
+				map[_y][_x+1] = map[_y][_x]+1;
+				qx.push(_x+1);
+				qy.push(_y);
+			}
+
+			if(_x > 0 && map[_y][_x-1] == 0)
+			{
+				map[_y][_x-1] = map[_y][_x]+1;
+				qx.push(_x-1);
+				qy.push(_y);
+			}
+
+			if(_y < y-1 && map[_y+1][_x] == 0)
+			{
+				map[_y+1][_x] = map[_y][_x]+1;
+				qx.push(_x);
+				qy.push(_y+1);
+			}
+
+			if(_y > 0 && map[_y-1][_x] == 0)
+			{
+				map[_y-1][_x] = map[_y][_x]+1;
+				qx.push(_x);
+				qy.push(_y-1);
+			}
+
+		}while(!qx.empty());
+
+		vctotal.push_back(map[_y][_x]-1);
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < vctotal.size() ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

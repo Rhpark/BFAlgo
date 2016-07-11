@@ -1,0 +1,183 @@
+#include <iostream>
+#include <string>
+#include <io.h>
+#include <direct.h>
+#include <fstream>
+#include <vector>
+
+#define	FILEDEEP	256
+#define FNAMELEN	256
+#define FCOUNT	256
+
+#define	INFOLDER	"\\*.*"
+
+using	namespace	std;
+
+ifstream fin;			//파일 입출력
+ofstream fout;
+
+string	FileTF;			//FILE인지 확인하기위해 주소를 끍어오는것.
+string	FolderTF;		//FOLDER 인지 확인 하기 위해 주소를 끍어 오는것. == FileTF+\\*.*
+string	filename;
+string	foldernam;		//망들기 위한것.
+string	phase;
+string	PearentFolder;		//최 상위 폴더
+
+int startname;			// '"'빼기 위한것
+int endname;			// 상동
+int endline = 0;
+int deep = 0;
+int addresslen;
+char *buf;				//파일을 이동할때 파일의 size 만큼 메모리를 구하기 위한것.
+
+char files[FILEDEEP][FCOUNT][FNAMELEN] = {NULL,};        
+// 파일명최대255자, 파일갯수최대256개
+
+int stdeep = 0;		//st에 제대로 체워넣기 위한것.
+int nFiles[FILEDEEP] = {0,};
+int total = 0;
+
+struct _finddata_t c_file[FILEDEEP];
+intptr_t hFile[FILEDEEP];
+
+void ModifyFileTF(int deep);
+void OKFile(int _deep, string _FileTF);
+void PerentFolder(string FileTF);
+
+int main()
+{
+	int deep = 0;
+
+	getline( cin, FileTF, '\n');
+
+	ModifyFileTF(-1);	
+
+	OKFile(deep,FileTF);
+
+	cout <<"	Total	" << total <<"	files." << endl;
+	
+	return 0;
+}
+
+void OKFile(int _deep, string _FileTF)
+{
+	int deep = _deep;
+
+	string FileTF = _FileTF;
+	FolderTF = FileTF + INFOLDER;
+
+	if( (hFile[deep] = _findfirst( FolderTF.c_str() , &c_file[deep] )) == -1L )
+	{
+		cout <<FileTF<<endl<<"은(는) 폴더 주소가 아닙니다," << endl;
+
+		fin.open(FileTF,ios::in|ios::binary);
+		if(fin.is_open())
+		{
+			cout<<"파일 카피를 시작 합니다"<<endl;
+			fin.seekg(0,ios::end);
+			int size = fin.tellg();
+			fin.seekg(0,ios::beg);
+
+			buf = new char[size];
+
+			fin.read(buf,size);
+			string FolderPhase;
+
+			int outaddress ;//= FileTF.find_first_of(PearentFolder);
+
+			for(outaddress = addresslen ;outaddress < FileTF.length();outaddress++)
+			{	FolderPhase += FileTF[outaddress];	}
+
+			fout.open(FolderPhase.c_str(),ios::out | ios::binary);
+			fout.write(buf,size);
+			cout<<"	"<<FolderPhase<<endl<<"	에 저장합니다"<<endl;
+			
+			fout.close();
+			fin.close();
+			
+			delete []buf;
+		}
+	}
+	else		// 문자열복사
+	{
+		do
+		{
+			strcpy(files[deep][nFiles[deep]], c_file[deep].name);
+
+			++nFiles[deep];
+		} while( _findnext( hFile[deep], &c_file[deep] ) == 0 );
+		_findclose(hFile[deep]);
+	}
+	if(deep == 0)
+		PerentFolder(FileTF);
+
+	cout<<endl<<"	폴더안의 내용은"<<endl;
+	for ( int i = 2; i < nFiles[deep]; i++ )
+	{
+		total++;
+		cout <<endl<<"files[deep][i]	is	"<<endl<< files[deep][i] << endl;
+		string DeepFiles = FileTF+ '\\' +files[deep][i];
+		cout<<"	DeepFiles	is	"<<DeepFiles<<endl;
+		string zzzz = DeepFiles+INFOLDER;
+
+		//cout<<"	OKFile(	"<<	deep+1<<"	)함수로 갑니다"<<endl;
+		if( (hFile[deep] = _findfirst( zzzz.c_str(), &c_file[deep] )) != -1L )
+		{
+			//cout<<"	"<<DeepFiles<<"	는 폴더 입니다	"<<endl;
+			string SunFolder;
+			int len;// = DeepFiles.find_first_of(PearentFolder);
+			for( len = addresslen; len < DeepFiles.length() ; len++)
+			{	SunFolder += DeepFiles[len];	}
+
+			_mkdir(SunFolder.c_str());
+			cout<<"	폴더	"<<SunFolder<<"	을(를) 만들었습니다.	"<<endl;
+		}
+		else
+		{
+			filename = files[deep][i];
+		}
+		OKFile(deep+1,DeepFiles);
+	}
+	nFiles[deep] = 0;
+	cout << endl;
+}
+
+void ModifyFileTF(int deep)
+{
+	string TmpFileTF;
+
+	TmpFileTF = FileTF;
+
+	if(FileTF[0] == '"')
+	{
+		TmpFileTF.clear();
+		for(int i=1;i<FileTF.length()-1;i++)
+		{
+			TmpFileTF += FileTF[i];
+		}
+	}
+	FileTF = TmpFileTF; 
+}
+
+void PerentFolder(string _FileTF)
+{
+	int i;
+
+	for(i = 0 ; i < _FileTF.length() ; i++)
+	{
+		if(_FileTF[i] == '\\')
+		{
+			startname = i+1;
+			endname = i;
+		}
+		else{	endname++;	}
+	}
+	
+	for( i = startname ; i <= endname ; i++ )
+	{	PearentFolder += _FileTF[i];	}
+
+	addresslen = startname;
+	foldernam = PearentFolder;
+	_mkdir(PearentFolder.c_str());
+	cout<<endl<<"	폴더	"<<PearentFolder<<endl<<"	을(를) 만듭니다	"<<endl;
+}

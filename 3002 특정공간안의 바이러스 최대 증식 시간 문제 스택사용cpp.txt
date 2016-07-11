@@ -1,0 +1,129 @@
+////////////////////////////////////////////////////
+//						  //
+//	3002 번 문제				  //
+//	특정공간안의 바이러스 최대 증식 시간 문제 //
+//	길찾기 응용 스택 사용			  //
+//						  //
+////////////////////////////////////////////////////
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+
+	int lenx,leny;
+	int **map;
+	int num;
+	vector<int>x1,y1;
+	vector<int>x2,y2;
+	vector<int>*px1,*py1;
+	vector<int>*px2,*py2;
+	vector<int>vctotal;
+
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			Increase();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		cin>>leny>>lenx;
+		map = new int *[leny];
+
+		for(int i = 0 ; i < leny; i ++)
+		{
+			map[i] = new int[lenx];
+			for(int j = 0 ; j < lenx ; j ++)
+			{
+				cin>>map[i][j];
+				if(map[i][j] == 1)
+				{
+					x1.push_back(j);
+					y1.push_back(i);
+				}
+				else if(map[i][j] == 2)
+					map[i][j] = -1;
+			}
+		}
+	}
+	void Increase()
+	{
+		num = 0;
+		int x,y;
+		int cnt = 2;
+		Connect();
+		while(true)
+		{
+			x = px1->at(px1->end() - px1->begin()-1);
+			y = py1->at(py1->end() - py1->begin()-1);
+			px1->pop_back();
+			py1->pop_back();
+
+			if(y > 0 && map[y-1][x] == 0)
+				Push(y-1,x,cnt);
+			if(y < leny-1 && map[y+1][x] == 0)
+				Push(y+1,x,cnt);
+			if(x > 0 && map[y][x-1] == 0)
+				Push(y,x-1,cnt);
+			if(x < lenx-1 && map[y][x+1] == 0)
+				Push(y,x+1,cnt);
+			if(px2->empty() && px1->empty())
+				break;
+			if(px1->empty())
+			{
+				Connect();
+				cnt++;
+			}	
+		}
+		vctotal.push_back((cnt-2));
+		px1->clear();
+		px2->clear();
+		py1->clear();
+		py2->clear();
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+	void Push(int y,int x,int cnt)
+	{
+		map[y][x] = cnt;
+		px2->push_back(x);
+		py2->push_back(y);
+	}
+	void Connect()
+	{
+		if(num %2 == 0)
+		{
+			px1 = &x1;
+			py1 = &y1;
+			px2 = &x2;
+			py2 = &y2;
+		}
+		else
+		{
+			px1 = &x2;
+			py1 = &y2;
+			px2 = &x1;
+			py2 = &y1;
+		}
+		num++;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

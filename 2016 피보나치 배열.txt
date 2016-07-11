@@ -1,0 +1,81 @@
+//////////////////////////////////////////
+//					//
+//	2016				//
+//	피보나치 배열화 하여 값 찾기	//
+//					//
+//////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+
+	int val;
+	int cnt;
+
+	vector<int>vcfibo;
+	vector<int>*vctotal;
+
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		vctotal = new vector<int>[total];
+		for(cnt = 0 ; cnt < total ; cnt ++)
+		{
+			InputLen();
+			Cacul();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		vcfibo.push_back(0);
+		vcfibo.push_back(1);
+		vcfibo.push_back(1);
+		for(int i = 3 ; i < 45; i ++)
+		{
+			vcfibo.push_back(vcfibo[i-1]+vcfibo[i-2]);
+		}
+		cin>>val;
+	}
+	void Cacul()
+	{
+		for(int i = 44 ; i > 0 ; i --)
+		{
+			if(vcfibo[i] == val)
+			{
+				vctotal[cnt].push_back(vcfibo[i]);	
+				break;
+			}
+
+			else if(vcfibo[i] < val)
+			{
+				vctotal[cnt].push_back(vcfibo[i]);
+				val -= vcfibo[i];
+			}
+		}
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+		{
+			for(int j = vctotal[i].size()-1 ; j >=0 ; j --)
+			{
+				cout<<vctotal[i][j]<<" ";
+			}
+			cout<<endl;
+		}
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

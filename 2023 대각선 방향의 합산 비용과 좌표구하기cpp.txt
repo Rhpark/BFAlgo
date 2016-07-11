@@ -1,0 +1,82 @@
+//////////////////////////////////////////
+//					//
+//   2023					//
+//   대각선 방향의 합산 비용과 좌표구하기	//
+//					//
+//					//
+//////////////////////////////////////////
+
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int len[2];
+	int reslenx;
+	int resleny;
+	vector<int>vctotal;
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			cin>>len[0]>>len[1];
+			Cacul();
+		}
+		Print();
+	}
+
+	void Cacul()
+	{
+		int x[2];
+		int y[2];
+		int sum = 0;
+		reslenx = 0;
+		resleny = 0;
+		for(int h = 0 ; h < 2 ; h ++)
+		{
+			x[h] = 0;
+			y[h] = 0;
+			for(int i = 1 ; i  ; i ++)
+			{
+				sum += i;
+				 if(sum >= len[h])
+				{
+					sum = sum - len[h];
+					x[h] = i -sum;
+					y[h] = sum+1;
+					reslenx += x[h];
+					resleny += y[h];
+					sum = 0;
+					break;
+				}
+			}
+		}
+		int val = 0;
+		for(int i = 1 ; i <= reslenx ; i ++)
+				val += i;
+
+		for(int j = 0 ; j < resleny-1; j ++)
+			val += reslenx+j;
+
+		vctotal.push_back(val);
+	}
+
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

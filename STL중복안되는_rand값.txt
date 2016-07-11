@@ -1,0 +1,26 @@
+#include<iostream>
+#include<list>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<time.h>
+
+
+using namespace std;
+
+int main()
+
+{
+	vector<int>ve(10);
+
+	for(int i=0;i<10;i++)
+		ve[i]=i+1;
+
+	srand(time(NULL));
+	random_shuffle(ve.begin(),ve.end());
+
+	for(int i=0;i<10;i++)
+		cout<<ve[i]<<endl;
+	
+	return 0;
+}

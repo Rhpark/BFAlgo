@@ -1,0 +1,112 @@
+//////////////////////////////////////////////////
+//						//
+//	2002					//
+//	경비원 문제 STL의 *max_element,coutn활용,	//
+//						//
+//////////////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int x,y,g;
+	int **map;
+
+	vector<int>vctotal;
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			Cacul();
+			Compare();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		int _x,_y;
+		cin>>y>>x>>g;
+		map = new int*[y];
+		for(int i = 0 ; i < y ; i ++)
+		{
+			map[i] = new int [x];
+			for(int j = 0 ; j < x; j ++)
+				map[i][j] = 0;
+		}
+
+		for(int i = 0 ; i < g ; i ++)
+		{
+			cin>>_y>>_x;
+			map[_y-1][_x-1] = -1;
+		}
+	}
+	void Cacul()
+	{
+		for(int i = 0 ; i < y ; i ++)
+		{
+			for(int j = 0 ; j < x; j ++)
+			{
+				if( map[i][j] != -1)
+				{
+					for(int _j = j+1 ;  _j < x ; _j  ++)
+					{
+						if(map[i][_j] == -1 )break;
+						map[i][j]++;
+					}
+					for(int _j = j-1 ; _j >= 0; _j  --)
+					{
+						if(map[i][_j] == -1 )break;
+						map[i][j]++;
+					}
+					for(int _i = i+1 ; _i < y ; _i++)
+					{
+						if(map[_i][j] == -1 )break;
+						map[i][j]++;
+					}
+					for(int _i = i-1 ; _i >= 0 ; _i--)
+					{
+						if(map[_i][j] == -1 )break;
+						map[i][j]++;
+					}
+				}	
+			}
+		}
+	}
+	void Compare()
+	{
+		int max = 0;
+		int maxcnt = 0;
+		int _max = 0;
+
+		for(int i = 0 ; i < y ; i ++)
+		{
+			_max = *max_element(&map[i][0],&map[i][x]);
+			if(_max > max)
+				max = _max;
+		}
+		for(int i = 0 ; i < y ; i ++)
+			maxcnt+=count(&map[i][0],&map[i][x],max);
+
+		vctotal.push_back(maxcnt);
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < vctotal.size() ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

@@ -1,0 +1,122 @@
+//////////////////////////////////
+//				//
+//	2025			//
+//	가위 바위 보 승자 구하기	//
+//				//
+//				//
+//////////////////////////////////
+
+#include<iostream>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+
+	int len;
+	string * str;
+
+	vector<int>vctotal;
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			Cacul();
+		}
+		Print();
+	}
+
+	void InputLen()
+	{
+		string tmp;
+		cin>>len;
+		str = new string [len];
+		for(int i = 0 ; i < len ; i ++)
+		{
+			cin>>tmp;
+			str[i] = '0';
+			str[i] += tmp;
+		}
+	}
+
+	void Cacul()
+	{
+		int cnt1,cnt2,cnt3,cntT;
+
+		cntT = cnt1 = cnt2 = cnt3 = 0;
+		for(int i = 1 ; i < str[0].size(); i ++)
+		{
+			for(int j = 0 ; j < len ; j ++)
+			{
+				if(str[j].at(0) == '0')
+				{
+					if(str[j].at(i) == 'R')
+						cnt1++;
+
+					else if(str[j].at(i) == 'S')
+						cnt2++;
+
+					else if(str[j].at(i) == 'P')
+						cnt3++;
+
+					cntT++;	
+				}
+			}
+			if(cnt1 == 0 && cnt2 > 0  && cnt3 > 0)
+				Delete(i,'P');
+
+			else if(cnt2 == 0 && cnt1 > 0 && cnt3 > 0)
+				Delete(i,'R');
+
+			else if(cnt3 == 0 && cnt2 > 0 && cnt1 > 0)
+				Delete(i,'S');
+
+			cnt1 = cnt2 = cnt3 = 0;
+			if(cntT == 1)break;
+			else cntT = 0;
+		}
+		vctotal.push_back(Find());
+	}
+	int Find()
+	{
+		int player = 0;
+		int cnt = 0;
+		for(int i = 0 ; i < len ; i ++)
+		{
+			if(str[i][0] == '0')
+			{
+				player = i;
+				cnt++;
+			}
+		}
+		if(cnt == 1)
+			return (player+1);
+		else
+			return 0;
+	}
+	void Delete(int delint , char del)
+	{
+		for(int i = 0 ; i < len ; i ++)
+			if(str[i][delint] == del)
+				str[i][0] = '1';
+	}
+
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

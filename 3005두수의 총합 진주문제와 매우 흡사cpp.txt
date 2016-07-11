@@ -1,0 +1,98 @@
+//////////////////////////////////////////////////
+//						//
+//	3005					//
+//	두수의 총합.				//
+//	정렬과 for문하나에 증감을 사용		//
+//	진주 문제와 흡사함.			//
+//						//
+//////////////////////////////////////////////////
+
+#include<iostream>
+#include<list>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int len;
+	int val;
+	list<int>vclen;
+	list<int>vctotal;
+	list<int>::iterator it;
+
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			Compare();
+		}
+		Print();
+	}
+
+	void InputLen()
+	{		
+		int tmp;
+		cin>>len>>val;
+		for(int i = 0 ; i < len ; i ++)
+		{
+			cin>>tmp;
+			vclen.push_back(tmp);
+		}
+		vclen.sort();		
+	}
+	void Compare()
+	{		
+		list<int>::iterator rit;
+
+		int cnt = 0;
+		int m;
+
+		rit = vclen.end();
+		m = 2000000000;
+		rit--;
+		
+		for(it = vclen.begin() ;it != rit ; )
+		{
+			int itres = * it + * rit;
+			
+			int gap = val-itres;
+			
+			if(itres >val)
+				gap = itres-val;
+							
+			if(gap < m)
+			{
+				m = gap;
+				cnt = 1;				
+			}
+			else if(gap == m)
+				cnt++;
+
+			if(itres < val)			
+				it++;
+			
+			else if(itres >= val)
+				rit--;
+
+			if(it == rit)break;
+		}
+		vctotal.push_back(cnt);
+		vclen.clear();
+	}
+	void Print()
+	{
+		for(it = vctotal.begin() ;it != vctotal.end() ; it++)
+			cout<<*it<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

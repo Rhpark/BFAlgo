@@ -1,0 +1,116 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<math.h>
+#include<string>
+
+using namespace std;
+
+class Algo
+{
+	vector<int>vcTotal;
+	int total;
+	int **map;
+	int x,y;
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			Cacul();
+		}
+		Print();
+	}
+	void Cacul()
+	{		
+		int cnt;
+		cin>>y>>x;
+		map = new int*[y];
+		vector<int>vclen;
+		for(int i = 0 ; i < y ; i ++)
+		{
+			map[i] = new int[x];
+			for(int j = 0 ; j < x ; j ++)
+			{
+				map[i][j] = 0;
+			}
+		}
+		cin>>cnt;
+		for(int i = 0 ; i < cnt ; i ++)
+		{
+			int a,b;
+			cin>>a>>b;
+			map[a-1][b-1] = -1;
+		}
+		vclen.push_back(-1);
+		for(int i = 0 ; i < y ; i ++)
+		{
+			for(int j = 0 ; j < x ; j ++)
+			{
+				if(map[i][j] == 0)
+				vclen.push_back(Compare(i,j));
+			}
+		}
+		vclen.push_back(-1);
+		if(*max_element(&vclen[0],&vclen[vclen.size()-1]) == -1)
+			vcTotal.push_back(0);
+		else
+		vcTotal.push_back(count(&vclen[0],&vclen[vclen.size()-1],
+			*max_element(&vclen[0],&vclen[vclen.size()-1])));
+	}
+	int Compare(int _i, int _j)
+	{
+		int cnt = 0;
+		if(_i > 0)
+		{
+			for(int i = _i -1 ; i >=0 ; i --)
+			{
+				if(map[i][_j] == 0)
+					cnt++;
+				else break;
+			}
+		}
+		if(_i < y-1)
+		{
+			for(int i = _i +1 ; i <y ; i ++)
+			{
+				if(map[i][_j] == 0)
+					cnt++;
+				else break;
+			}
+		}
+		if(_j > 0)
+		{
+			for(int i = _j -1 ; i >=0 ; i --)
+			{
+				if(map[_i][i] == 0)
+					cnt++;
+				else break;
+			}
+		}
+		if(_j < x-1)
+		{
+			for(int i = _j +1 ; i <x ; i ++)
+			{
+				if(map[_i][i] == 0)
+					cnt++;
+				else break;
+			}
+		}
+		return cnt;
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < vcTotal.size() ; i ++)
+		{
+			cout<<vcTotal[i]<<endl;
+		}
+	}
+};
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

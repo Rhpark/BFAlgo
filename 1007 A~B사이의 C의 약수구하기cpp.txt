@@ -1,0 +1,52 @@
+//////////////////////////////////////////
+//					//
+//	1007				//
+//	A~B사이 C의 약수 구하기		//
+//					//
+//////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int num[3];
+	vector<int>vctotal;
+
+public:
+
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		int cnt = 0;
+		cin>>num[0]>>num[1]>>num[2];
+		for(int i = num[0] ; i <= num[1] ; i ++) 
+		{
+			if(num[2]%i == 0)
+				cnt++;
+		}
+		vctotal.push_back(cnt);
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < vctotal.size() ; i++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+}

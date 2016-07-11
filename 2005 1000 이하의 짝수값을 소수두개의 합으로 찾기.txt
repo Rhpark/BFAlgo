@@ -1,0 +1,101 @@
+//////////////////////////////////////////////////////////
+//							//
+//	2005						//
+//	1000 이하의 짝수값을 소수두개의 합으로 찾기	//
+//							//
+//							//
+//////////////////////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int val;
+
+	vector<int>vcprime;
+	vector<int>vctotal;
+
+public:
+
+	void Prime()
+	{
+		vcprime.push_back(2);
+		int cnt;
+		for(int i = 3 ; i < 1300 ; i ++)
+		{
+			cnt = 0;
+			for(int j = 0 ; j < vcprime.size() ; j ++)
+			{
+				if(i % vcprime[j] == 0)
+					cnt++;
+			}
+			if(cnt == 0)
+				vcprime.push_back(i);
+		}
+	}
+	void InputTotal()
+	{
+		Prime();
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		int i;
+		int j = 0;
+		int front,end;
+		front = end = -1;
+		
+		cin>>val;
+
+		for( i = 0 ;  ; i ++)
+		{
+			if(vcprime[i] >val)
+				break;
+		}
+
+		for(int _i = i-1 ; _i >=0 ; )
+		{
+			if(vcprime[_i] + vcprime[j] == val)
+			{
+				front = j;
+				end = _i;
+				_i--;
+				j++;
+			}
+			
+			else if(vcprime[_i] + vcprime[j] < val)
+				j++;
+		
+			else
+				_i--;
+			
+			if(_i < j)break;
+		}
+		vctotal.push_back(vcprime[front]);
+		vctotal.push_back(vcprime[end]);
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < vctotal.size() ; i++)
+		{
+			cout<<vctotal[i]<<" "<<vctotal[i+1]<<endl;
+			i++;
+		}
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

@@ -1,0 +1,335 @@
+/////////////////////////////////////
+//				      //
+//	2004번			      //
+//	숫자 문자화 문자 숫자화	      //
+//	다음에 반드시 STL써서 해보기.   //
+/////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+
+	string front;
+	string end;
+	string res;
+
+	int sum;
+	int val1;
+	int val2;
+
+	vector<string>vctotal;
+	vector<int>vcsum;
+	vector<int>vcval1;
+	vector<int>vcval2;
+	vector<string>retotal;
+public:
+	void InputTotal()
+	{		
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			cin>>front;
+			cin>>end;
+			ToInt();
+			ToString();
+			vctotal.clear();
+		}
+		Print();
+	}
+
+	void ToInt()
+	{
+		val1 = 0;
+		val2 = 0;
+		for(int i = 0 ; i < front.length(); i++)
+		{
+			if(front[i] == 'M')
+				val1 += 1000;
+			else if(front[i] == 'D')
+				val1 += 500;
+			else if(front[i] == 'C')
+			{
+				val1 += 100;
+				if(i < front.length()-1)
+				{
+					if(front[i+1] == 'D')
+					{
+						val1 += 300;
+						i++;
+					}
+					else if(front[i+1] == 'M')
+					{
+						val1 += 800;
+						i++;
+					}
+				}
+			}
+			else if(front[i] == 'L')
+				val1 += 50;
+			else if(front[i] == 'X')
+			{
+				val1 += 10;
+				if(i < front.length()-1)
+				{
+					if(front[i+1] == 'L')	
+					{
+						val1 += 30;
+						i++;
+					}
+					else if(front[i+1] == 'C')
+					{
+						val1 += 80;
+						i++;
+					}
+				}
+			}
+			else if(front[i] == 'V')
+				val1 += 5;
+			else if(front[i] == 'I')
+			{
+				val1 += 1;
+				if(i < front.length()-1)
+				{
+					if(front[i+1] == 'V')
+					{
+						val1 += 3;
+						i++;
+					}
+					else if(front[i+1] == 'X')
+					{
+						val1 += 8;
+						i++;
+					}
+				}
+			}
+		}
+		for(int i = 0 ; i < end.length(); i++)
+		{
+			if(end[i] == 'M')
+			{	val2 += 1000;}
+			else if(end[i] == 'D')
+			{	val2 += 500;}
+			else if(end[i] == 'C')
+			{
+				val2 += 100;
+				if(i < end.length()-1)
+				{
+					if(end[i+1] == 'D')
+					{
+						val2 += 300;
+						i++;
+					}
+					else if(end[i+1] == 'M')
+					{
+						val2 += 800;
+						i++;
+					}
+				}
+			}
+			else if(end[i] == 'L')
+			{	val2 += 50;}
+			else if(end[i] == 'X')
+			{
+				val2 += 10;
+				if(i < end.length()-1)
+				{
+					if(end[i+1] == 'L')	
+					{
+						val2 += 30;
+						i++;
+					}
+					else if(end[i+1] == 'C')
+					{
+						val2 += 80;
+						i++;
+					}
+				}
+			}
+			else if(end[i] == 'V')
+			{	val2 += 5;}
+			else if(end[i] == 'I')
+			{
+				val2 += 1;
+				if(i < end.length()-1)
+				{
+					if(end[i+1] == 'V')
+					{
+						val2 += 3;
+						i++;
+					}
+					else if(end[i+1] == 'X')
+					{
+						val2 += 8;
+						i++;
+					}
+				}
+			}
+		}
+		sum = val1 + val2;
+		vcsum.push_back(sum);
+		vcval1.push_back(val1);
+		vcval2.push_back(val2);
+	}
+
+	void ToString()
+	{
+		while(sum != 0)
+		{
+			if(sum - 1000 >= 0)
+			{
+				vctotal.push_back("M");
+				sum -= 1000;
+				res+="M";
+			}
+			else if(sum - 900 >= 0)
+			{
+				if(vctotal.size() > 0 && vctotal[vctotal.size()-1] == "CD")
+				{
+					vctotal.pop_back();
+					vctotal.push_back("MCCC");
+					res+="MCCC";
+				}
+				else
+				{
+					vctotal.push_back("CM");
+					res+="CM";
+				}
+				sum -= 900;
+			}
+			else if(sum - 500 >= 0)
+			{
+				vctotal.push_back("D");
+				res+="D";
+				sum -= 500;
+			}
+			else if(sum - 400 >= 0)
+			{
+				if(vctotal.size() > 0 && vctotal[vctotal.size()-1] == "CM")
+				{
+					vctotal.pop_back();
+					vctotal.push_back("MCCC");
+					res+="MCCC";
+				}
+				else
+				{
+					vctotal.push_back("CD");
+					res+="CD";
+				}
+				sum -= 400;
+			}
+			else if(sum - 100 >= 0)
+			{
+				vctotal.push_back("C");
+				sum -= 100;
+				res+="C";
+			}
+			else if(sum - 90 >= 0)
+			{
+				if(vctotal.size() > 0 && vctotal[vctotal.size()-1] == "XL")
+				{
+					vctotal.pop_back();
+					vctotal.push_back("CXXX");
+					res+="CXXX";
+				}
+				else
+				{
+					vctotal.push_back("XC");
+					res+="XC";
+				}
+				sum -= 90;
+			}
+			else if(sum - 50 >= 0)
+			{
+				vctotal.push_back("L");
+				res+="L";
+				sum -= 50;
+			}
+			else if(sum - 40 >= 0)
+			{
+				if(vctotal.size() > 0 && vctotal[vctotal.size()-1] == "XC")
+				{
+					vctotal.pop_back();
+					vctotal.push_back("CXXX");
+					res+="CXXX";
+				}
+				else
+				{
+					vctotal.push_back("XL");
+					res+="XL";
+				}
+				sum -= 40;
+			}
+			else if(sum - 10 >= 0)
+			{
+				vctotal.push_back("X");
+				res+="X";
+				sum -= 10;
+			}
+			else if(sum - 9 >= 0)
+			{
+				if(vctotal.size() > 0 && vctotal[vctotal.size()-1] == "IV")
+				{
+					vctotal.pop_back();
+					vctotal.push_back("XIII");
+					res+="XIII";
+				}
+				else
+				{
+					vctotal.push_back("IX");
+					res+="IX";
+				}
+				sum -= 9;
+			}
+			else if(sum - 5 >= 0)
+			{
+				vctotal.push_back("V");
+				res+="V";
+				sum-=5;
+			}
+			else if(sum - 4 >= 0)
+			{
+				if(vctotal.size() > 0 && vctotal[vctotal.size()-1] == "IX")
+				{
+					vctotal.pop_back();
+					vctotal.push_back("XIII");
+					res+="XIII";
+				}
+				else
+				{
+					vctotal.push_back("IV");
+					res+="IV";
+				}
+				sum-=4;
+			}
+			else if(sum - 1 >= 0)
+			{
+				vctotal.push_back("I");
+				res+="I";
+				sum-=1;
+			}
+		}
+		retotal.push_back(res);
+		res.clear();
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+		{
+			cout<<vcval1[i]<<" "<<vcval2[i]<<" "<<vcsum[i]<<
+			endl<<retotal[i]<<endl;
+		}
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

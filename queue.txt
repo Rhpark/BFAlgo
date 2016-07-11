@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct q{
+        int len[100];
+        int top;
+        }q;
+
+void push(q *q1,int val){
+     q1->top++;
+     q1->len[q1->top]=val;   
+     printf("push is q1[%d] = %d \n" , q1->top , q1->len[q1->top]);  
+     }
+             
+void pop(q *q1){
+     int zero;
+     int top=q1->top;
+     int i;
+     zero=0;
+     if(q1->top==-1){
+                     printf("this queue is empty!!!\n");
+                     return 0;
+                     }
+     printf("pop is q1[%d] = %d \n",zero,q1->len[zero]);    
+     for(i=0;i<top;i++){
+                            q1->len[i]=q1->len[i+1];
+                            }
+     q1->top--;  
+     }
+
+int main(int argc, char *argv[])
+{   
+    q q1;
+    q1.top=-1;
+    int num;
+    while(1){
+    printf(" 1 is push , 2 is pop , 3 is exit\n"); 
+    scanf("%d",&num);
+    if(num==1){
+               int val;
+               printf("push the number : \n");
+               scanf("%d",&val);
+               push(&q1, val);
+               }
+    if(num==2)pop(&q1);
+    if(num==3)break;
+    }
+  
+  system("PAUSE");	
+  return 0;
+}

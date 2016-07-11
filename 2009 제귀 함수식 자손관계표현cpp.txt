@@ -1,0 +1,92 @@
+/////////////////////////////////////////////
+//					      //
+//	2009				      //
+//	제귀 함수식 자손 관계 표현		      //
+//					      //
+/////////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int len;
+	int **map;
+
+	int cnt;
+	int max;
+	vector<int>vctotal;
+
+public:
+
+	void InputTotal()
+	{		
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			FindMother();
+			max = 0;
+		}
+		Print();
+	}
+
+	void InputLen()
+	{
+		cin>>len;
+		map = new int*[--len];
+		for(int i = 0 ; i < len ; i ++)
+		{
+			map[i] = new int[2];
+			cin>>map[i][0]>>map[i][1];
+		}
+	}
+
+	void FindMother()
+	{
+		int tmp = -1;
+		cnt = 1;
+		max = 1;
+		for(int i = 0 ; i < len ; i ++)
+		{
+			for(int j = 0 ; j < len ; j ++)
+			{
+				if(map[i][0] == map[j][1])
+					tmp = i;
+			}
+			if(tmp == -1)
+				_Recurrence(i);
+			else
+				tmp = -1;
+		}
+		vctotal.push_back(max);
+	}
+	void _Recurrence(int mother)
+	{			
+		cnt++;
+		for(int i = 0 ; i < len ; i ++)
+		{	
+			if(map[mother][1] == map[i][0])
+				_Recurrence(i);
+		}
+
+		if(max < cnt)	
+			max = cnt;
+		cnt--;
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+	return 0;
+}

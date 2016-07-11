@@ -1,0 +1,119 @@
+#include<iostream>
+#include<algorithm>
+#include<fstream>
+
+#define MAX 100
+
+using namespace std;
+
+class storage
+{
+	ifstream fin;	//파일 입력받기위한것.
+	int ary[MAX];	//배열받기위한것
+	int inputary;	//input할 갯수.
+	int top1;		//제일 높은수
+	int _top;		//의 배열번지
+	int top2;		//top1이 두개이상일시 가동.
+	int sum;		//총 합.
+
+public:
+	storage()		//초기화.
+	{
+		memset(ary,0,sizeof(int)*MAX);
+		_top = 0;
+		top2 = -1;
+		top2 = -1;
+		sum = 0;
+	}
+	void finput();	//파일받아서 최고값과 그 갯수 찾기.
+	void calcul();	//계산하기
+	inline void result()		//결과값 출력.
+	{
+		cout<<sum<<endl;
+	}
+};
+
+int main()
+{
+	storage st;
+	st.finput();
+	st.calcul();
+	st.result();
+	return 0;
+}
+
+void storage::finput()
+{
+	int a = 0;
+	fin.open("1storage.txt");
+	fin>>inputary;
+	cout<<inputary<<endl;
+	for(int i = 0 ; i< inputary; i ++)
+	{
+		int x,y;
+		fin>>x>>y;
+		ary[x] = y;
+		if(_top<y)
+		{
+			_top = y;
+			top1 = x;
+		}
+	}
+	for(int i = 0 ; i< MAX; i ++)
+	{
+		if(ary[i] == _top)
+		{
+			if(a>0)
+			{	top2 = i;	}
+			a++;
+		}
+	}
+}
+
+void storage::calcul()
+{
+	for(int i = 0 ; i < top1 ; i++)
+	{
+		if(ary[i] > ary[i+1])
+		{
+			ary[i+1] = ary[i];
+		}
+	}
+
+	if(top2 != -1)
+	{
+		for(int i = top1 ; i < top2 ; i++)
+		{
+			if(ary[i] > ary[i+1])
+			{
+				ary[i+1] = ary[i];
+			}
+		}
+		for(int  i = MAX; i > top2; i--)
+		{
+			if(ary[i] > ary[i-1])
+			{
+				ary[i-1] = ary[i];
+			}
+		}
+	}
+
+	else
+	{
+		for(int i = MAX-1 ; i > top1 ; i--)
+		{
+			if(ary[i] > ary[i-1])
+			{
+				ary[i-1] = ary[i];
+			}
+		}
+	}
+
+	for(int i = 0 ; i < MAX; i ++)
+	{
+		if(ary[i] != 0)
+		{
+			sum+=ary[i];
+		}
+	}
+}

@@ -1,0 +1,404 @@
+#include <iostream>
+#include <sys/stat.h>
+#include <string>
+#include <io.h>
+#include <direct.h>
+#include <fstream>
+#include <vector>
+#include <ctime>
+
+#define FNAMELEN	256
+#define MAXSIZE		1024
+
+#define	INFOLDER	"\\*.*"
+
+using	namespace	std;
+
+class Capy
+{	
+	ifstream fin;			//파일 입출력
+	ofstream fout;
+
+	string  driver;			//어느 드라이버에 저장할것인가?
+	string	FileTF;			//FILE인지 확인하기위해 주소를 끍어오는것.
+	string	FolderTF;			//FOLDER 인지 확인 하기 위해 주소를 끍어 오는것. == FileTF+\\*.*
+	vector <string> fname;			//하위 폴더 주소들을 저장하여 파일을 복사하기위한것.
+	vector <string> ::iterator itfname;
+	vector <string> input;			//입력받는 주소를 받기 위한것.
+	vector <string> ::iterator itinput;
+
+	int startname;			// '"'빼기 위한것
+	int endname;			// 상동
+	int deep;
+	int addresslen;			//주소에서 이름만 따오기 위한것.
+	int foldercnt;			//폴더 겟수
+	int filecnt;			//파일 겟수
+	int totalsize;			//총 사이즈
+
+	unsigned __int64 savefile;//파일 바이트크기
+
+	int nFiles;
+	
+	double totalfilesize;
+
+	void ModifyFileTF();					//입력받은값 수정하기.
+
+	int savedriver();						//드라이버 설정.
+
+	void PerentFolder(string FileTF);			//최상위폴더 찾아만들기.
+
+	void MakeFolder(int _deep, string _FileTF);		//하위 폴더들 
+											//생성및 파일 전체 크기 확인.
+
+	void FolderInFileCapy();					//폴더안 파일복사
+
+	void FileCapy();							//파일 복사.
+
+	unsigned __int64 getFilesize(string filename);		//폴더내 총 용량 구하는것.
+
+public:
+
+	Capy();				//변수들 초기화
+	void start();				//여기서 시작함수.
+	~Capy()				//결과값 함수.
+	{
+		cout<<"	totalfilesize is	"<<totalfilesize/MAXSIZE/MAXSIZE<<"MByte"<<endl;
+		cout<<"	foldercnt is	"<<foldercnt<<endl;
+		cout<<"	filecnt is	"<<filecnt<<endl;
+		cout<<"	total file and folder	is	"<<totalsize<<"	Folder or File"<<endl;
+	}
+};
+
+int main()
+{
+	Capy *cp1 = new Capy;
+	cp1->start();
+	delete cp1;
+
+	return 0;
+}
+void Capy::start()
+{
+	struct _finddata_t c_file;			//폴더 내부 파일및 폴더들 이름 따오는것
+	intptr_t hFile;					//폴더 확인법.
+	int TF = savedriver();
+	
+	if( TF == 0 )return ;
+
+	int val;
+	cout<<"	몇개 복사할꺼??"<<endl;
+	cin>>val;
+
+	cout<<"	주소 넣어"<<endl;
+	
+	for(int  i =  0 ; i < val ; i ++)
+	{
+		if(i == 0)
+		{
+			cout<<"	if문 들어감	"<<endl;
+			getline( cin, FileTF, '\n');
+			getline( cin, FileTF, '\n');
+		}
+		else if(i != 0 )
+		{
+			cout<<"	else문 들어감	"<<endl;
+			getline( cin, FileTF, '\n');
+		}
+		input.push_back(FileTF);
+		cout<<FileTF<<endl;
+	}
+
+	for(itinput = input.begin() ; itinput != input.end() ; itinput++)
+	{
+		int a;
+		cout<<*itinput<<endl;
+		FileTF = *itinput;
+		ModifyFileTF();	
+		FolderTF = FileTF + INFOLDER;
+
+		if( (hFile = _findfirst( FolderTF.c_str() , &c_file )) != -1L )
+		{	
+			if(TF == 0 )return;
+			totalsize++;
+
+			clock_t start, finish, used_time = 0;
+			start = clock();
+
+			///폴더일시 여기 들어옴.
+			cout<<"	카피 시작 합니다.	"<<endl;
+
+			PerentFolder(FileTF);
+			cout<<"========최상위 폴더 만듬======"<<endl;
+
+			MakeFolder(deep,FileTF);	
+			cout<<"==========하위 폴더들 다 만듬======="<<endl;
+
+			FolderInFileCapy();
+			cout<<"================파일 카피다함==========="<<endl;
+
+			finish = clock();
+			used_time = finish - start;
+
+			printf("	%3f	초 걸림\n",(float)used_time/CLOCKS_PER_SEC);
+		}
+
+		else
+		{
+			fin.open(FileTF,ios::in | ios::binary);
+			if(fin.is_open())
+			{	
+				totalsize++;
+				//int TF = savedriver();
+				if(TF == 0 )return;
+				cout<<"파일 입니다	"<<endl<<"카피 중입니다 기다려주세욤."<<endl;
+
+				clock_t start, finish, used_time = 0;
+				start = clock();
+
+				FileCapy();
+				finish = clock();
+				used_time = finish - start;
+				printf("	%3f	초 걸림\n",(float)used_time/CLOCKS_PER_SEC);
+			}
+			else
+			{
+				cout<<endl<<"R U Kidding Me???!"<<endl<<endl;
+			}
+		}
+	}
+}
+
+Capy::Capy()
+{
+	deep = 0;
+	nFiles  = 0;
+	totalfilesize = 0;
+	totalsize = 0;
+	savefile = 0;
+	foldercnt = 0;
+	filecnt = 0;
+}
+
+void Capy::ModifyFileTF()
+{
+	string TmpFileTF;
+	TmpFileTF = FileTF;
+
+	if(FileTF[0] == '"')
+	{
+		TmpFileTF.clear();
+		for(unsigned int i=1;i<FileTF.length()-1;i++)
+		{	TmpFileTF += FileTF[i];	}
+	}
+	FileTF = TmpFileTF; 
+}
+
+void Capy:: PerentFolder(string _FileTF)
+{
+	foldercnt++;
+	fname.push_back(_FileTF);
+	string	PearentFolder = driver;		//최 상위 폴더
+	unsigned int i;
+
+	for(i = 0 ; i < _FileTF.length() ; i++)
+	{
+		if(_FileTF[i] == '\\')
+		{
+			startname = i+1;
+			endname = i;
+		}
+		else{	endname++;	}
+	}
+
+	for( i = startname ; i <= endname ; i++ )
+	{	PearentFolder += _FileTF[i];	}
+
+	addresslen = startname;
+
+	_mkdir(PearentFolder.c_str());
+
+	cout<<endl<<"	폴더	"<<PearentFolder<<endl<<"	을(를) 만듭니다	"<<endl;
+}
+
+void Capy::MakeFolder(int _deep, string _FileTF)
+{
+	int deep = _deep;	
+
+	struct _finddata_t c_file;
+	intptr_t hFile;
+
+	string FileTF = _FileTF;
+	FolderTF = FileTF + INFOLDER;
+
+	vector <string> files;
+	vector <string>::iterator itfiles;
+
+	if( (hFile = _findfirst( FolderTF.c_str() , &c_file )) != -1L )
+	{
+		string DeepFiles;
+		do
+		{
+			char name[FNAMELEN];
+			strcpy(name, c_file.name);
+			++nFiles;			
+
+			string FF = FileTF + '\\' + name;
+			files.push_back(name);
+
+		} while( _findnext( hFile, &c_file ) == 0 );
+		_findclose(hFile);
+
+		for( itfiles = files.begin()+2 ; itfiles != files.end() ; itfiles++ )
+		{
+			totalsize++;
+			DeepFiles = FileTF+ '\\' + *itfiles;
+			string Folderopen = DeepFiles + INFOLDER;
+
+			if( (hFile = _findfirst( Folderopen.c_str() , &c_file )) != -1L )
+			{
+				foldercnt++;
+
+				string SunFolder = driver;
+
+				unsigned int len;
+
+				for( len = addresslen; len < DeepFiles.length() ; len++)
+				{	SunFolder += DeepFiles[len];	}
+
+				_mkdir(SunFolder.c_str());
+
+				cout<<"	폴더	"<<endl<<"	"<<SunFolder<<endl<<"	을(를) 만들었습니다.	"<<endl;
+
+				fname.push_back(DeepFiles);
+
+				MakeFolder(deep+1,DeepFiles);			
+			}
+			else
+			{
+				filecnt++;
+				double size = (double)getFilesize(DeepFiles);
+				totalfilesize += size;
+				//cout<<"	file size is	"<<size<<endl;
+			}		
+		}
+	}
+}
+
+void Capy::FolderInFileCapy()
+{
+	for(itfname = fname.begin(); itfname <fname.end();itfname++)
+	{
+		string LowFile = * itfname;
+
+		struct _finddata_t c_file;
+		intptr_t hFile;
+
+		vector <string> files;
+		vector <string>::iterator itfiles;
+
+		string UpperFolder = LowFile + INFOLDER;
+
+		if( (hFile = _findfirst( UpperFolder.c_str() , &c_file )) != -1L )
+		{
+			string DeepFiles;
+			do
+			{
+				char name[FNAMELEN];
+				strcpy(name, c_file.name);
+				files.push_back(name);
+				++nFiles;			
+
+			} while( _findnext( hFile, &c_file ) == 0 );
+			_findclose(hFile);
+
+			for( itfiles = files.begin()+2 ; itfiles != files.end() ; itfiles++ )
+			{
+				DeepFiles = LowFile+ '\\' + *itfiles;
+
+				fin.open(DeepFiles,ios::in|ios::binary);
+				if(fin.is_open())
+				{
+					system("cls");
+					cout<<endl<<*itfiles<<endl;
+					char *buf;	//파일을 이동할때 파일의 size 만큼 메모리를 구하기 위한것.
+					cout<<"	카피를 시작 합니다"<<endl;
+					fin.seekg(0,ios::end);
+					int size = fin.tellg();
+					fin.seekg(0,ios::beg);
+					buf = new char[size];
+
+					fin.read(buf,size);
+					string FilePhase;
+					string SunFile = driver;
+					unsigned int len;
+
+					for( len = addresslen; len < DeepFiles.length() ; len++)
+					{		SunFile += DeepFiles[len];	}
+
+					fout.open(SunFile.c_str(),ios::out | ios::binary);
+					fout.write(buf,size);
+					savefile += size;
+					cout<<"	현제 이 파일의 크기는 "<<size<<"Byte"<<endl;
+					//cout<<"	"<<SunFile<<endl<<"	에 저장합니다"<<endl;
+					cout<<"	현제 누적 파일 저장량"<<(double)savefile/MAXSIZE/MAXSIZE<<"MByte"<<endl;
+					cout<<"	총 저장해야할 양"<<totalfilesize/MAXSIZE/MAXSIZE<<"MByte"<<endl;
+
+					fout.close();
+					fin.close();
+					delete []buf;
+				}
+			}
+		}
+	}
+}
+void Capy::FileCapy()
+{
+	filecnt++;
+	fname.push_back(FileTF);
+	char *buf;	//파일을 이동할때 파일의 size 만큼 메모리를 구하기 위한것.
+	cout<<"	파일 입니다	"<<endl<<"	카피를 시작 합니다"<<endl;
+	fin.seekg(0,ios::end);
+	int size = fin.tellg();
+	fin.seekg(0,ios::beg);
+	buf = new char[size];
+
+	fin.read(buf,size);
+	string FilePhase;
+	string SunFile = driver;
+	unsigned int len = FileTF.find_last_of('\\');
+
+	for(len += 1 ; len < FileTF.length() ; len++)
+	{		SunFile += FileTF[len];	}
+
+	fout.open(SunFile.c_str(),ios::out | ios::binary);
+	fout.write(buf,size);
+
+	cout<<"	"<<SunFile<<endl<<"	에 저장합니다"<<endl;
+	cout<<"	file size is "<<size<<endl;
+	totalfilesize += (double)size;
+	cout<<"	totla files size is	"<<totalfilesize<<endl;
+	
+	fout.close();
+	fin.close();
+	delete []buf;
+}
+
+unsigned __int64 Capy :: getFilesize(string filename)
+{
+	struct _stati64 statbuf;
+
+	if ( _stati64(filename.c_str(), &statbuf)) return -1;
+
+	return statbuf.st_size;
+}
+
+int Capy::savedriver()
+{
+	cout<<"	어디에 저장 할것입니까?"<<endl;
+	cout<<"	1번:	C 드라이버"<<endl<<"	2번:	D드라이버?"<<endl;
+	int num;
+	cin>>num;
+	if(num == 1){ driver = "c:\\"; return 1;}
+	else if(num == 2){driver = "d:\\";return 1;}
+	else{	cout<<"글못봐 병시나???ㅋ"<<endl; return 0;	}
+}

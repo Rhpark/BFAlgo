@@ -1,0 +1,56 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	vector<int>vctotal;
+public:
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		int front,end,res;
+		int a[2],b[2],c[2];
+
+		cin>>a[0]>>a[1];
+		front = (a[0]*60)+a[1];
+
+		cin>>b[0]>>b[1];
+		end = (b[0]*60)+b[1];
+
+		if(end>front)
+			res = end - front;
+
+		else 
+			res = 24*60 - (front - end);
+
+		c[0] = res/60;
+		c[1] = res%60;
+		vctotal.push_back(c[0]);
+		vctotal.push_back(c[1]);
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < vctotal.size() ; i++)
+		{
+			cout<<vctotal[i]<<" "<<vctotal[i+1]<<endl;
+			i++;
+		}
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+}

@@ -1,0 +1,61 @@
+//////////////////////////////////////////
+//					//
+//	1009				//
+//	두 수의 최소 공배수		//
+//					//
+//////////////////////////////////////////
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int num[2];
+	int _num[2];
+	vector<int>vctotal;
+
+public:
+
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		int cnt = 0;
+		cin>>num[0]>>num[1];
+		_num[0] = num[0];
+		_num[1] = num[1];
+		while(true)
+		{
+			if(_num[0]<_num[1])
+				_num[0]+=num[0];
+			if(_num[1]<_num[0])
+				_num[1]+=num[1];
+			if(_num[0] == _num[1])
+			{
+				vctotal.push_back(_num[0]);
+				break;
+			}
+		}
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < vctotal.size() ; i++)
+			cout<<vctotal[i]<<endl;
+	}
+};
+
+int main()
+{
+	Algo a;
+	a.InputTotal();
+}

@@ -1,0 +1,86 @@
+//heep 
+
+
+#include<iostream>
+
+#define FST 0
+#define LST 1
+
+using namespace std;
+
+class heep{
+	//잠시만 퍼블릭으로,확인차,완료후 프라이빗으로 이동,
+
+
+public:
+	int val;
+	heep * dp[2];
+	heep * up;
+
+	heep(int _val);
+
+	heep(heep * pear, int _val);
+
+	void swap(heep * x, heep * y);
+};
+heep::heep(int _val)
+{
+	val = _val;
+	dp[0] = NULL;
+	dp[1] = NULL;
+	up = NULL;
+}
+heep::heep(heep * pear, int _val)
+{
+		int unull;
+		this->val = _val;
+		this->up = pear;
+	while(1){
+		if((pear->dp[FST] == NULL) && (pear->dp[LST] == NULL))
+			break;
+		else if((pear->dp[FST] != NULL) && (pear->dp[LST] == NULL))
+			break;
+		else if(pear->dp[FST] != NULL){
+			pear = pear->dp[FST];
+		}
+		else if(pear->dp[LST] != NULL){
+			pear = pear->dp[LST];
+		}
+	}
+	(pear->dp[FST] == NULL) ? (unull = FST) : (unull = LST);//FST = 0; LST = 1;
+	//cout<< unull <<endl;	//unull = 1
+	pear->dp[unull] = this;
+
+	if(this->val > pear->val)
+	{
+		swap(this,pear);
+	}
+	this->dp[0] = NULL;
+	this->dp[1] = NULL;
+	//cout<< val <<endl;
+
+}
+void heep::swap(heep * x, heep * y){	//(this,king) 
+	
+	int tmp;
+	tmp = x->val;
+	x->val = y->val;
+	y->val = tmp;
+	while(1){
+		if(y->up != NULL){
+			x->up=x;
+			y->up=y;
+		}
+		if(x->val > y->val){
+			tmp = x->val;
+			x->val = y->val;
+			y->val = tmp;
+		}
+		else break;
+	}
+}
+void main(){
+	heep * king = new heep(1);
+	heep * Rsor = new heep(king,2);
+	heep * Lsor = new heep(king,3);
+}

@@ -1,0 +1,35 @@
+//////////////////////////////////////////////////
+//						//
+// 점화식 nCr ( n개중 r개를 선택하는 경우의 수) //
+//						//
+//						//
+//////////////////////////////////////////////////
+
+#include<iostream>
+
+using namespace std;
+
+class nCr
+{
+	int n,r;
+public:
+	void nC()
+	{
+		cin>>n>>r;
+		cout<<n<<" 개중 "<<r<<"개를 선택할 경우의 수는 "<<Cr()<<endl;
+	}
+	int Cr()
+	{
+		int p = 1;
+		for(int i = 1 ; i <= r ; i ++)
+			p = p*(n-i+1)/i;
+		return p;
+	}
+};
+
+int main()
+{
+	nCr c;
+	c.nC();
+	return 0;
+}

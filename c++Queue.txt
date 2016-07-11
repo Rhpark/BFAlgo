@@ -1,0 +1,83 @@
+#include<iostream>
+#include<cstdlib>
+#include<cstring>
+
+// low capy deep capy
+
+using namespace std;
+
+class Q{
+
+	int num;
+
+public:
+	static int top;	
+	Q * list;
+	
+	Q()
+	{	
+		num = 0;
+		list = NULL;
+	}
+
+	Q(Q & q, int _num)
+	{	
+		top++;
+		num = _num;
+		list = NULL;
+		q.list=this;
+	}
+
+	inline void pop()
+	{
+		if(top > 0)
+			top--;
+		
+		else 
+			cout<<"  this Queue is empty!!!pop"<<endl;
+		
+	}
+
+	inline void peek()const
+	{
+		if(top > -1 )
+		cout<<endl<<num<<endl;
+		else {
+			cout<<"  this Queue is empty!!!push"<<endl;
+		}
+	}
+
+};
+
+int Q::top = 0;
+
+void main()
+{
+	int num=2;
+	Q * q=new Q;
+	Q * qq;
+	qq = q;
+	while(1){
+		int out;
+		cout<<"  1is push, 2 is pop, 3is peek,4is exit,"<<endl<<"  input your number  : "<<endl;
+		cin>>out;
+		if(out == 1){
+			int val;
+			cout<<"  input your number in push : "<<endl;
+			cin>>val;
+			Q * q1 = new Q(*qq,val);
+			qq = q1;
+		}
+		else if(out == 2){
+			if(q->top > 0){
+			q = q->list;
+			}
+			q->pop();
+		}
+		else if(out == 3){
+			q->peek();
+		}
+		else
+			break ;
+	}
+}

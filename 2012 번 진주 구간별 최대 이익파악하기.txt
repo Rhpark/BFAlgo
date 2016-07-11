@@ -1,0 +1,122 @@
+//////////////////////////////////////////
+//					//
+// 2012 번 진주 구간별 최대 이익파악하기//
+//  (n*2형태가 아닌 n의 시간으로 하기)	//
+//  (친구 도움 받음 앞과뒤에서 동시에)	//
+//  앞으로 이것보다 더 좋은 코딩하기	//
+//					//
+//////////////////////////////////////////
+
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Algo
+{
+	int total;
+	int len;
+	int max;
+	vector<int>lenvc;
+	vector<int>vctotal;
+
+public:
+
+	void InputTotal()
+	{
+		cin>>total;
+		for(int i = 0 ; i < total ; i ++)
+		{
+			InputLen();
+			Cacul();
+			lenvc.clear();
+		}
+		Print();
+	}
+	void InputLen()
+	{
+		int n;
+		cin>>len;
+		max = 0;
+		for(int i = 0 ; i < len ; i ++)
+		{
+			cin>>n;
+			if(max < n-1000) max = n-1000;
+			lenvc.push_back((n-1000));
+		}
+	}
+	void Cacul()
+	{
+		int front = 0;
+		int frontSum = lenvc[0];
+
+		int end = lenvc.size()-1;
+		int endSum = lenvc[lenvc.size()-1];
+
+		while(true)
+		{
+			if(front+1 < end)
+			{
+				int	_front	= frontSum	+	lenvc[front+1];
+				front++;
+				if(_front > 0)
+				{
+					frontSum = _front;
+					if(max <frontSum )
+						max = frontSum;
+				}
+				else
+				{
+					frontSum = lenvc[front];
+				}
+			}
+			if(end -1 >front)
+			{
+				int	_end	= endSum	+	lenvc[end-1];
+
+				end--;
+				if(_end > 0)
+				{
+					endSum = _end;
+					if(endSum > max )
+						max = endSum;
+				}
+				else
+				{
+					endSum = lenvc[end];
+				}
+			}
+			else
+			{
+				if(frontSum < max && endSum < max)
+				{	vctotal.push_back(max);break;}
+				
+				if(frontSum >0 && endSum > 0){
+					vctotal.push_back(frontSum+endSum);break;}
+				if(frontSum < 0)
+				{
+					vctotal.push_back(endSum);break;
+				}
+				if(endSum <0){
+					vctotal.push_back(frontSum);break;}
+				if(frontSum == max)
+				{
+					vctotal.push_back(max);break;}
+				break;
+			}
+		}
+	}
+	void Print()
+	{
+		for(int i = 0 ; i < total ; i ++)
+		{	cout<<vctotal[i]<<endl;	}
+	}
+};
+int main()
+{
+	Algo a;
+	a.InputTotal();
+
+	return 0;
+}
