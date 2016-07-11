@@ -1,0 +1,23 @@
+1
+git init	//최초 한번
+
+2
+
+git remote add origin //git 주소 	//최초 한번만.
+
+3
+
+git add .
+
+4 
+git commit -m 기록명
+
+
+5
+
+git push origin master // login
+
+
+
+3 -> 4 -> 5
+
